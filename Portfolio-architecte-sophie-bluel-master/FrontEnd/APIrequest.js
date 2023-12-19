@@ -1,66 +1,39 @@
-const elementContainer = document.querySelector('.gallery');
-fetch("http://localhost:5678/api-docs/")
-.then((response) => {
-    return response.json();
+const elementContainer = document.querySelector('.gallery')
+fetch("http://localhost:5678/api/works")
+.then(response => {
+    return response.json()
 })
-.then((imagesTabs) => {
-    console.log(imagesTabs);
-    for(const imageTab of imagesTabs) {
-        const figureElement = document.createElement('figure');
-        figureElement.innerText = imageTab;
-        elementContainer.appendChild(figureElement);
-    }
-});
+.then(imagesTabs => {
+    console.log(imagesTabs)
+        for(let i = 0; i < imagesTabs.length; i++) {
+            const figureElement = document.createElement('figure')
+            const imgElement = document.createElement('img')
+            const titleElement = document.createElement('figcaption')
+            imgElement.src = imagesTabs[i].imageUrl
+            titleElement.innerText = imagesTabs[i].title
+
+            elementContainer.appendChild(figureElement)
+            figureElement.appendChild(imgElement)
+            figureElement.appendChild(titleElement)
+        }
+
+        const buttons = document.querySelectorAll('#portfolio button');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+        
+                const images = document.querySelectorAll('.gallery img');
+                images.forEach(image => {
+                    image.style.display = 'none';
+                });
+
+                const filter = button.getAttribute("imagesTabs.name");
+                const filterImg = document.querySelectorAll('.gallery img[src="${imagesTabs.imageUrl}"]');
+                filterImg.forEach(image => {
+                    image.style.display = 'block';
+                });
+            });
+        });  
 
 
-
-/*async function APIrequest() {
-    try {
-    const projectsURL = "http://localhost:5678/api-docs/#/default/post_users_login";
-    const response = await fetch(projectsURL);
-
-    if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des données')
-    }
-
-    const projectsJson = await response.json();
-    console.log(projectsJson);
-
-    dataOnHTML(projectsJson);
-    } catch (error) {
-        console.error('Erreur 2:', error);
-    }
-}*/
-
-
-
-/***Request & Add projects on html***/
-
-/*const elementContainer = document.querySelector('.gallery');
-
-async function APIrequest() {
-    try {
-    const projectsURL = "http://localhost:5678/api-docs/#/default/post_users_login";
-    const response = await fetch(projectsURL);
-
-    if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des données')
-    }
-
-    const projectsJson = await response.json();
-    console.log(projectsJson);
-
-    dataOnHTML(projectsJson);
-    } catch (error) {
-        console.error('Erreur 2:', error);
-    }
-}
-
-function dataOnHTML(imagesTab) {
-    console.log(imagesTab);
-    for(const imageTab of imagesTab) {
-        const figureElement = document.createElement('figure');
-        figureElement.innerText = imageTab.title;
-        elementContainer.appendChild(figureElement);
-    }
-}*/
+    })
