@@ -9,7 +9,6 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script src="APIrequest.js" type="module"></script>
 </head>
 <body>
 <header>
@@ -37,10 +36,10 @@
 	</section>
 	<section id="portfolio">
 		<h2>Mes Projets</h2>
-		<button class="btn-all-projects">Tous</button>
-		<button class="btn-objects">Objets</button>
-		<button class="btn-appartments">Appartements</button>
-		<button class="btn-hotels-&-restaurants">Hôtels & Restaurants</button>
+		<button onclick="onAllChange()">Tous</button>
+		<button id="objButton">Objets</button>
+		<button onclick="onAppartmentsChange()" data-category="Appartements" id="appButton">Appartements</button>
+		<button onclick="onHotelsAndRestaurantsChange()" data-category="Hôtels & Restaurants" id="hrButton">Hôtels & Restaurants</button>
 		<div class="gallery">
 
 		</div>
@@ -67,5 +66,6 @@
 		</ul>
 	</nav>
 </footer>
+<script src="APIrequest.js" type="module"></script>
 </body>
 </html>
