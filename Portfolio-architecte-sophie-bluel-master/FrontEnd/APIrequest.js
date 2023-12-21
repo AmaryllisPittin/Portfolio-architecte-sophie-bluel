@@ -1,13 +1,13 @@
 function onObjectsChange() {
-    const elementsToHide = document.querySelectorAll('[name]:not([name="Objets"])');
-    const objButton = document.getElementById('objButton');
+    let categories = [];
 
-    objButton.addEventListener('click', () => {
-        elementsToHide.forEach(element => {
-            element.style.display = 'none';
-            
-        });
-    });
+    const objFilteredElement = categories.filter(categories => categories.name === "Objets");
+    const appartFilteredElement = categories.filter(categories => categories.name === "Appartements");
+    const hrFilteredElement = categories.filter(categories => categories.name === "Hôtels & Restaurants");
+
+    const objButton = document.getElementById('objButton');
+    const appButton = document.getElementById('appButton');
+    const hrButton = document.getElementById('hrButton');
 }
 
 fetch("http://localhost:5678/api/works")
@@ -19,6 +19,7 @@ fetch("http://localhost:5678/api/works")
 
     const elementContainer = document.querySelector('.gallery');
     imagesTabs.forEach(item => {
+
         const figureElement = document.createElement('figure');
         const imgElement = document.createElement('img');
         const titleElement = document.createElement('figcaption');
@@ -31,7 +32,7 @@ fetch("http://localhost:5678/api/works")
         elementContainer.appendChild(figureElement);
     });
 
-    onObjectsChange();
+
 });
 
 fetch("http://localhost:5678/api/categories")
@@ -41,6 +42,18 @@ fetch("http://localhost:5678/api/categories")
 .then(categories => {
     console.log(categories);
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*const elementContainer = document.querySelector('.gallery')
 fetch("http://localhost:5678/api/works")
