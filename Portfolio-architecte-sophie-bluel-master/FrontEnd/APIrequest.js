@@ -1,4 +1,63 @@
-function onObjectsChange() {
+let allProjects = [];
+
+fetch("http://localhost:5678/api/works")
+.then(response => response.json())
+.then(imagesTabs => {
+    const elementContainer = document.querySelector('.gallery');
+    imagesTabs.forEach(item => {
+        const figureElement = document.createElement('figure');
+        const imgElement = document.createElement('img');
+        const titleElement = document.createElement('figcaption');
+
+        imgElement.src = item.imageUrl;
+        titleElement.innerText = item.title;
+
+        figureElement.dataset.categoryName = item.category;
+        figureElement.appendChild(imgElement);
+        figureElement.appendChild(titleElement);
+        elementContainer.appendChild(figureElement);
+
+    });
+});
+
+fetch("http://localhost:5678/api/categories")
+.then(response => response.json())
+.then(categoriesData => {
+    categories = categoriesData;
+
+    const objButton = document.getElementById('objButton');
+
+    objButton.addEventListener('click', () => {
+        const elementsToFilter = document.querySelectorAll('.gallery figure');
+
+        function filterChange(categories) {
+            return allProjects.filter((imagesTabs) => imagesTabs.categoryId === categories.id);
+        }
+
+        elementsToFilter.forEach(element => {
+            const categoryName = categories.name;
+            if (categoryName === "Objets") {
+                element.style.display ='block';
+            } else {
+                element.style.display ='none';
+            }
+        });
+    });
+
+    objButton.addEventListener('dblclick', () => {
+        const elementsToShow = document.querySelectorAll('.gallery figure');
+    
+        elementsToShow.forEach(element => {
+            element.style.display = 'block';
+        });
+    });
+});
+
+
+
+/************************************************************************************************************************** */
+
+/*function onObjectsChange() {
     let categories = [];
 
     const objFilteredElement = categories.filter(categories => categories.name === "Objets");
@@ -33,15 +92,40 @@ fetch("http://localhost:5678/api/works")
     });
 
 
-});
+});*/
+
+/***Filter buttons***/
+/*let categories = [];
+const elementContainers = [];
+const elementContainer = document.querySelector('.gallery');
 
 fetch("http://localhost:5678/api/categories")
 .then(response => {
-    return response.json()
+    return response.json();
 })
-.then(categories => {
-    console.log(categories);
-});
+.then(categoriesData => {
+    categories = categoriesData;
+
+    objButton.addEventListener('click', () => {
+        const buttonfilter = categories.filter(category => category.name === 'Objets');
+
+        elementContainers.forEach(container => {
+            const categoryName = container.name.categoryName;
+
+            if (buttonfilter.some(category => category.name === categoryName)) {
+                container.style.display ='block';
+            } else {
+                container.style.display ='none';
+            }
+        })
+
+    });
+
+});*/
+
+
+
+
 
 
 
