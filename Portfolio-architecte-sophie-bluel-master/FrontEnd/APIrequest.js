@@ -1,8 +1,12 @@
 let allProjects = [];
+let cloneAllProjects = [];
 
 fetch("http://localhost:5678/api/works")
 .then(response => response.json())
 .then(imagesTabs => {
+    allProjects = imagesTabs;
+    cloneAllProjects = imagesTabs;
+    
     const elementContainer = document.querySelector('.gallery');
     imagesTabs.forEach(item => {
         const figureElement = document.createElement('figure');
@@ -16,14 +20,65 @@ fetch("http://localhost:5678/api/works")
         figureElement.appendChild(imgElement);
         figureElement.appendChild(titleElement);
         elementContainer.appendChild(figureElement);
-
     });
 });
 
+function onFilterClick(event){
+    const filterButton = event.target;
+    const categoryValue = +filterButton.dataset.category;
+    const elementContainer = document.querySelector('.gallery');
+    projectsFigures = document.querySelectorAll('figure');
+
+    projectsFigures.forEach(figure => {
+        const category = +figure.dataset.categoryName;
+
+            if(categoryValue === 0 || category === categoryValue) {
+                figure.style.display = 'block';
+            } else {
+                figure.style.display = 'none';
+            }
+    })
+
+
+    /*if(categoryValue === 0){
+        return allProjects;
+    }
+
+    const filtredData = allProjects.filter(function(item) {
+        if(item.categoryId === categoryValue){
+            return true;
+        }else {
+            return false;
+        }
+    });
+
+    console.log(filtredData);*/
+
+};
+
+
+
+const allFilter = document.getElementById('allButton');
+const objectFilter = document.getElementById('objButton');
+const appartementFilter = document.getElementById('appButton');
+const hotelFilter = document.getElementById('hrButton');
+
+allFilter.addEventListener('click', onFilterClick)
+objectFilter.addEventListener('click', onFilterClick)
+appartementFilter.addEventListener('click', onFilterClick)
+hotelFilter.addEventListener('click', onFilterClick)
+
+
+
+
+
+
+
+/*
 fetch("http://localhost:5678/api/categories")
 .then(response => response.json())
 .then(categoriesData => {
-    categories = categoriesData;
+    const categories = categoriesData;
 
     const objButton = document.getElementById('objButton');
 
@@ -51,135 +106,4 @@ fetch("http://localhost:5678/api/categories")
             element.style.display = 'block';
         });
     });
-});
-
-
-
-/************************************************************************************************************************** */
-
-/*function onObjectsChange() {
-    let categories = [];
-
-    const objFilteredElement = categories.filter(categories => categories.name === "Objets");
-    const appartFilteredElement = categories.filter(categories => categories.name === "Appartements");
-    const hrFilteredElement = categories.filter(categories => categories.name === "Hôtels & Restaurants");
-
-    const objButton = document.getElementById('objButton');
-    const appButton = document.getElementById('appButton');
-    const hrButton = document.getElementById('hrButton');
-}
-
-fetch("http://localhost:5678/api/works")
-.then(response => {
-    return response.json();
-})
-.then(imagesTabs => {
-    console.log(imagesTabs)
-
-    const elementContainer = document.querySelector('.gallery');
-    imagesTabs.forEach(item => {
-
-        const figureElement = document.createElement('figure');
-        const imgElement = document.createElement('img');
-        const titleElement = document.createElement('figcaption');
-
-        imgElement.src = item.imageUrl;
-        titleElement.innerText = item.title;
-
-        figureElement.appendChild(imgElement);
-        figureElement.appendChild(titleElement);
-        elementContainer.appendChild(figureElement);
-    });
-
-
 });*/
-
-/***Filter buttons***/
-/*let categories = [];
-const elementContainers = [];
-const elementContainer = document.querySelector('.gallery');
-
-fetch("http://localhost:5678/api/categories")
-.then(response => {
-    return response.json();
-})
-.then(categoriesData => {
-    categories = categoriesData;
-
-    objButton.addEventListener('click', () => {
-        const buttonfilter = categories.filter(category => category.name === 'Objets');
-
-        elementContainers.forEach(container => {
-            const categoryName = container.name.categoryName;
-
-            if (buttonfilter.some(category => category.name === categoryName)) {
-                container.style.display ='block';
-            } else {
-                container.style.display ='none';
-            }
-        })
-
-    });
-
-});*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*const elementContainer = document.querySelector('.gallery')
-fetch("http://localhost:5678/api/works")
-.then(response => {
-    return response.json()
-})
-.then(imagesTabs => {
-    console.log(imagesTabs)
-    console.log(imagesTabs.name)
-        for(let i = 0; i < imagesTabs.length; i++) {
-            const figureElement = document.createElement('figure')
-            const imgElement = document.createElement('img')
-            const titleElement = document.createElement('figcaption')
-
-            imgElement.src = imagesTabs[i].imageUrl
-            titleElement.innerText = imagesTabs[i].title
-
-            elementContainer.appendChild(figureElement)
-            figureElement.appendChild(imgElement)
-            figureElement.appendChild(titleElement)
-        }
-        imagesTabs.forEach(item => {
-            const category = item.category;
-            console.log(category);
-
-            if(item.name !== 'Objets') {
-                item.style.display = 'none';
-                };
-        });
-    })*/
-
-/***Filter Function***/
-/*fetch("http://localhost:5678/api/categories")
-.then(response => {
-    return response.json()
-})
-
-onObjectsChange();
-
-
-    const objButton = document.getElementById('objButton');
-    const elementsToHide = document.querySelectorAll('[name]:not([name="Objets"])');
-
-
-    objButton.addEventListener('click', onObjectsChange);*/
