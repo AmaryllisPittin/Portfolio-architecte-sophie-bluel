@@ -42,6 +42,9 @@ let loginConnexion = inputSubmitConnection.addEventListener('click', (a) => {
             sessionStorage.setItem('Token', data.token);
 
             window.location.replace('index.html');
+            const loginLinkOnIndex = document.getElementById('login-link');
+            console.log(loginLinkOnIndex);
+            loginLinkOnIndex.innerHTML = 'logout';
         }
     });
 });
