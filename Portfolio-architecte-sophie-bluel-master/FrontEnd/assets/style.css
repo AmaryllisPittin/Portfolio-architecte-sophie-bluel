@@ -281,7 +281,7 @@ footer nav ul {
 
 /*****MODAL*****/
 
-#modal1 {
+#modal {
 	position:fixed;
 	top:0;
 	left:0;
@@ -292,7 +292,7 @@ footer nav ul {
 	display:flex;
 	align-items:center;
 	justify-content: center;
-	display: none;
+	display: none;	
 }
 
 .modal-wrapper {
@@ -306,11 +306,15 @@ footer nav ul {
 	display:flex;
 	justify-content: center;
 	position:relative;
+	box-sizing: border-box;
 }
 
 .modal-wrapper h3 {
 	font-size:22px;
-	padding-top:30px;
+	width:100%;
+	position:absolute;
+	top:70px; 
+	left:250px;
 }
 
 .modal-wrapper i {
@@ -318,4 +322,43 @@ footer nav ul {
 	right:35px;
 	top:30px;
 	cursor: pointer;
+}
+
+.modal-body {
+	display:grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(3, 1fr);
+	flex-wrap:wrap;
+	position:absolute;
+	top:150px;
+	row-gap:20px;
+	column-gap:0px;
+	box-sizing: border-box;
+	margin-left:30px;
+}
+
+.modal-body img {
+	width:65%;
+}
+
+.modal-footer {
+	display:flex;
+	justify-content:center;
+	align-items:flex-end;
+	width:100%;
+	box-sizing: border-box;
+}
+
+.modal-btn-add {
+	font-family:'Syne';
+	font-weight:700;
+	color: white;
+	background-color: #1D6154;
+	width: 38%;
+	height:5%;
+	border-radius: 60px;
+	position:absolute;
+	bottom:40px;
+	right:200px;
+	cursor:pointer;
 }
