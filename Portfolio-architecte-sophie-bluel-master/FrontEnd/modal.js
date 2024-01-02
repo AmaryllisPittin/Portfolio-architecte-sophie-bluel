@@ -1,17 +1,23 @@
-let modal = null;
-const selector = document.getElementById('modal');
-const target = selector;
+const overlay = document.getElementById('modal');
+const modal = document.getElementById('modal-content');
+
 let modalOpened = false;
+
+modal.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    return;
+});
 
 const openModal = function (e) {
     e.preventDefault();
 
-    if(target !== null) {
-        target.style.display = 'flex';
-        target.removeAttribute('aria-hidden');
-        target.setAttribute('aria-modal', 'true');
-        modal = target;
-        modal.addEventListener('click', closeModal);
+    if(overlay !== null) {
+        overlay.style.display = 'flex';
+        overlay.removeAttribute('aria-hidden');
+        overlay.setAttribute('aria-modal', 'true');
+
+        overlay.addEventListener('click', closeModal);
         document.getElementById('js-close-modal-icon').addEventListener('click', closeModal);
         modalOpened = true;
     } else {
@@ -21,20 +27,20 @@ const openModal = function (e) {
 
 const closeModal = function (e) {
     e.preventDefault();
-    if(modal === null) return;
-    if(target !== null) {
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
-        modal.removeAttribute('aria-modal');
-        modal.removeEventListener('click', closeModal);
+    if(overlay === null) return;
+    if(overlay !== null) {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden', 'true');
+        overlay.removeAttribute('aria-modal');
+        overlay.removeEventListener('click', closeModal);
         document.getElementById('js-close-modal-icon').removeEventListener('click', closeModal);
-        modal = null;
+        overlay = null;
 
         modalOpened = false;
     } else {
         console.log('la cible n\'a pas été trouvée / ou est null');
     }
-}
+};
 
 const stopPropagation = function (e) {
     e.stopPropagation();
@@ -75,80 +81,6 @@ fetch("http://localhost:5678/api/works")
 
 
 
-/***Config de base pour la modale***/
-
-/*let modal = null;
-const selector = document.getElementById('modal');
-const target = selector;
-
-const openModal = function (e) {
-    e.preventDefault();
-
-    if(target !== null) {
-        target.style.display = 'flex';
-        target.removeAttribute('aria-hidden');
-        target.setAttribute('aria-modal', 'true');
-        modal = target;
-        modal.addEventListener('click', closeModal);
-        document.getElementById('js-close-modal-icon').addEventListener('click', closeModal);
-    } else {
-        console.log('la cible n\'a pas été trouvée / ou est null');
-    }
-};
-
-/*******/
-
-/*const closeModal = document.querySelector('.modal-close');
-const modalOverlay = document.querySelector('.overlay');
-
-closeModal.addEventListener('click', () => {
-    selector.style.display = 'none';
-});
-
-modalOverlay.addEventListener('click', () => {
-    selector.style.display = 'none';
-    resetImage();
-    title.value ='';
-    category.value ='';
-});
 
 
-/***Fermer la modale***/
-
-/*const closeModal = function (e) {
-    e.preventDefault();
-    if(modal === null) return;
-    if(target !== null) {
-        modal.style.display = 'none';
-        modal.setAttribute('aria-hidden', 'true');
-        modal.removeAttribute('aria-modal');
-        modal.removeEventListener('click', closeModal);
-        document.getElementById('js-close-modal-icon').removeEventListener('click', closeModal);
-        modal = null;
-    } else {
-        console.log('la cible n\'a pas été trouvée / ou est null');
-    }
-}
-
-const stopPropagation = function (e) {
-    e.stopPropagation();
-}
-
-const closeModalOutSide = function (e) {
-    if (modal !== null && !modal.contains(e.target)) {
-        closeModal(e);
-    }
-}
-
-document.querySelectorAll('.portfolio-modified').forEach(a => {
-    a.addEventListener('click', function(e) {
-        openModal(e);
-        modal = document.getElementById('modal1');
-        e.stopPropagation();
-    });
-});
-
-document.addEventListener('click', closeModalOutSide);
-
-/*document.getElementById('modal1').addEventListener('click', stopPropagation);*/
 

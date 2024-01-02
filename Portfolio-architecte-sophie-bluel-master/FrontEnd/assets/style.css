@@ -297,7 +297,7 @@ footer nav ul {
 
 .modal-wrapper {
 	width:600px;
-	height:750px;
+	height:600px;
 	max-width: 100vh;
 	padding:30px;
 	overflow:auto;
@@ -313,7 +313,7 @@ footer nav ul {
 	font-size:22px;
 	width:100%;
 	position:absolute;
-	top:70px; 
+	top:8%; 
 	left:250px;
 }
 

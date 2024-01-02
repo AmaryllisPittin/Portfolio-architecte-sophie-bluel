@@ -18,7 +18,7 @@
 		<ul>
 			<li>projets</li>
 			<li>contact</li>
-			<li><a href="login.html" id="login-link">login</a></li>
+			<li id="login-link"><a href="login.html">login</a></li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 		</ul>
 	</nav>
@@ -43,7 +43,7 @@
 				<p>modifier</p>
 			</a>
 			<aside id="modal" class="portfolio-modal" aria-hidden="true" role="dialog" aria-modal="false" aria-labelledby="title-modal">
-				<div class="modal-wrapper">
+				<div class="modal-wrapper" id="modal-content">
 					<h3 id="title-modal">Galerie photo</h3>
 					<i class="fa-solid fa-x" id="js-close-modal-icon"></i>
 					<div class="modal-body">
@@ -87,5 +87,6 @@
 </footer>
 <script src="APIrequest.js" type="module"></script>
 <script src="modal.js"></script>
+<script src="login.js" type="module"></script>
 </body>
 </html>
