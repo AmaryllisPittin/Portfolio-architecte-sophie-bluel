@@ -124,12 +124,33 @@ fileInput.id = 'file-input';
 
 fileInput.style.display = 'none';
 
-const label = document.createElement('label');
-label.htmlFor = 'file-input';
-label.textContent = '+ Ajouter photo';
+const labelInsertImage = document.createElement('label');
+labelInsertImage.htmlFor = 'file-input';
+labelInsertImage.textContent = '+ Ajouter photo';
+labelInsertImage.classList.add('insert-image-label');
 
 const pImageFormat = document.createElement('p');
 pImageFormat.innerText = 'jpg, png: 4mo max';
+/*Le formulaire*/
+const formContainer = document.createElement('div');
+formContainer.classList.add('form-container');
+const addImageForm = document.createElement('form');
+
+const formTitleImage = document.createElement('input');
+fileInput.type = 'text';
+fileInput.id = 'title-input';
+const labelTitleImage = document.createElement('label');
+labelTitleImage.htmlFor = 'title-input';
+labelTitleImage.textContent = 'Titre';
+labelTitleImage.classList.add('form-label');
+
+const formCategoryImage = document.createElement('input');
+fileInput.type = 'text';
+fileInput.id = 'category-input';
+const labelCategoryImage = document.createElement('label');
+labelCategoryImage.htmlFor = 'category-input';
+labelCategoryImage.textContent = 'Catégorie';
+labelCategoryImage.classList.add('form-label');
 
 fileInput.addEventListener('change', function(event) {     // réagit aux changements, récupération de l'image//
     const file = event.target.files[0];
@@ -141,11 +162,21 @@ fileInput.addEventListener('change', function(event) {     // réagit aux change
 
 inputContainerFlex.appendChild(imageIcon);
 inputContainerFlex.appendChild(fileInput);
-inputContainerFlex.appendChild(label);
-modalContentAddBody.appendChild(modalAddInputContainer);
+inputContainerFlex.appendChild(labelInsertImage);
 inputContainerFlex.appendChild(pImageFormat);
+
+addImageForm.appendChild(labelTitleImage);
+addImageForm.appendChild(formTitleImage);
+addImageForm.appendChild(labelCategoryImage);
+addImageForm.appendChild(formCategoryImage);
+
+modalContentAddBody.appendChild(modalAddInputContainer);
+
 modalContentAdd.appendChild(modalContentAddBody);
 modalAddInputContainer.appendChild(inputContainerFlex);
+
+formContainer.appendChild(addImageForm);
+modalContentAddBody.appendChild(formContainer);
 
 
 

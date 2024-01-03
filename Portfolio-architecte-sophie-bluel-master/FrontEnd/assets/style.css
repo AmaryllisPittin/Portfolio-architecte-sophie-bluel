@@ -186,7 +186,8 @@ margin: auto;
 #contact h2{
 	margin-bottom: 20px;
 }
-#contact form {
+#contact form,
+.form-container form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
@@ -194,7 +195,9 @@ margin: auto;
 }
 
 #contact input,
-.login-input {
+.login-input,
+#title-input,
+#category-input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
@@ -423,7 +426,7 @@ footer nav ul {
 	align-items:center;
 }
 
-.input-container-flex label {
+.insert-image-label {
 	margin-top:30px;
 	background-color: #B9C5CC;
 	padding:15px 35px 15px 35px;
@@ -434,3 +437,20 @@ footer nav ul {
 	font-size:0.8em;
 	margin-top:10px;
 }
+
+.form-container {
+	position:relative;
+	top:300px;
+	left:60px;
+	width:86.5%;
+}
+
+.form-label {
+	padding-bottom:15px;
+	padding-top:25px;
+}
+
+.form-container form {
+	margin-top:0;
+}
+
