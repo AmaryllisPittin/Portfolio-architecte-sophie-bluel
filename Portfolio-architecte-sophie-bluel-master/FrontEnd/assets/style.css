@@ -295,7 +295,8 @@ footer nav ul {
 	display: none;	
 }
 
-.modal-wrapper {
+.modal-wrapper,
+.modal-add-wrapper {
 	width:600px;
 	height:600px;
 	max-width: 100vh;
@@ -309,7 +310,8 @@ footer nav ul {
 	box-sizing: border-box;
 }
 
-.modal-wrapper h3 {
+.modal-wrapper h3,
+.modal-add-wrapper h3 {
 	font-size:22px;
 	width:100%;
 	position:absolute;
@@ -317,11 +319,18 @@ footer nav ul {
 	left:250px;
 }
 
-.modal-wrapper i {
+.modal-wrapper i,
+.modal-add-wrapper i {
 	position:absolute;
 	right:35px;
 	top:30px;
 	cursor: pointer;
+}
+
+.modal-add-wrapper .fa-arrow-left {
+	right:0;
+	left:35px;
+	font-size:1.5em;
 }
 
 .modal-body {
@@ -330,15 +339,41 @@ footer nav ul {
 	grid-template-rows: repeat(3, 1fr);
 	flex-wrap:wrap;
 	position:absolute;
-	top:150px;
-	row-gap:20px;
+	top:130px;
+	row-gap:30px;
 	column-gap:0px;
 	box-sizing: border-box;
-	margin-left:30px;
+	width:90%;
+	margin-left:5%;
 }
 
 .modal-body img {
-	width:65%;
+	width:88%;
+}
+
+.modal-span-bin {
+	position: relative;
+	bottom:137px;
+	left:30px;
+}
+
+.fa-trash-can {
+	display:flex;
+	justify-content: center;
+	align-items:center;
+	color:white;
+	background-color: black;
+	width:22px;
+	height:23px;
+	border-radius:4px;
+}
+
+.input-container .fa-image {
+	position:relative;
+	top:20px;
+	right:0;
+	font-size:80px;
+	color:#B9C5CC;
 }
 
 .modal-footer {
@@ -346,6 +381,7 @@ footer nav ul {
 	justify-content:center;
 	align-items:flex-end;
 	width:100%;
+	height:10%;
 	box-sizing: border-box;
 }
 
@@ -361,4 +397,40 @@ footer nav ul {
 	bottom:40px;
 	right:200px;
 	cursor:pointer;
+}
+
+/*****modal add images*****/
+
+.modal-add-body {
+	width:90%;
+}
+
+.input-container {
+	background-color:#E8F1F6;
+	width:70%;
+	height:33%;
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+	position:absolute;
+	top:110px;
+	right:15%;
+}
+
+.input-container-flex {
+	display:flex;
+	flex-direction:column;
+	align-items:center;
+}
+
+.input-container-flex label {
+	margin-top:30px;
+	background-color: #B9C5CC;
+	padding:15px 35px 15px 35px;
+	border-radius:25px;
+}
+
+.input-container-flex p {
+	font-size:0.8em;
+	margin-top:10px;
 }

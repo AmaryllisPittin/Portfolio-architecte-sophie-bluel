@@ -51,6 +51,7 @@ document.querySelectorAll('.portfolio-modified').forEach(a => {
 });
 
 /***Ajout de la gallerie à la modale***/
+
 let allProjects = [];
 let cloneAllProjects = [];
 
@@ -63,15 +64,99 @@ fetch("http://localhost:5678/api/works")
     const elementContainer = document.querySelector('.modal-body');
     imagesTabs.forEach(item => {
         const imgElement = document.createElement('img');
+        const figureElement = document.createElement('figure');
 
         imgElement.src = item.imageUrl;
 
-        elementContainer.appendChild(imgElement);
+        figureElement.appendChild(imgElement);
+        elementContainer.appendChild(figureElement);
+
+        const spanBinElement = document.createElement('span');
+        spanBinElement.classList.add('modal-span-bin');
+        binIcon = document.createElement('i');
+        binIcon.classList.add('fa-solid', 'fa-trash-can');
+
+        spanBinElement.appendChild(binIcon);
+        figureElement.appendChild(spanBinElement);
     });
 });
 
+/***Création de la partie "Ajout photos"***/
+let modalContent = document.querySelector('.modal-wrapper');
+const addImagesButton = document.querySelector('.modal-btn-add');
+const modalContainer = document.getElementById('modal')
+let modalContentAdd = document.createElement('div');
+
+modalContentAdd.classList.add('modal-add-wrapper');
+
+/**header du modalContentAdd**/
+const modalAddTitle = document.createElement('h3');
+modalAddTitle.innerText='Ajout photo';
+
+arrowIcon = document.createElement('i');
+arrowIcon.classList.add('fa-solid', 'fa-arrow-left');
+
+xIcon = document.createElement('i');
+xIcon.classList.add('fa-solid', 'fa-x');
+xIcon.id = 'js-close-modal-icon';
+
+modalContentAdd.appendChild(modalAddTitle);
+modalContentAdd.appendChild(arrowIcon);
+modalContentAdd.appendChild(xIcon);
+
+/**body du modalContentAdd**/
+const modalContentAddBody = document.createElement('div');
+modalContentAddBody.classList.add('modal-add-body');
+
+const modalAddInputContainer = document.createElement('div');
+modalAddInputContainer.classList.add('input-container');
+/*Ce que contient le modalAddInputContainer*/
+const inputContainerFlex = document.createElement('div');
+inputContainerFlex.classList.add('input-container-flex');
+
+const imageIcon = document.createElement('i');
+imageIcon.classList.add('fa-regular', 'fa-image');
+
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.accept =  'image/*';
+fileInput.id = 'file-input';
+
+fileInput.style.display = 'none';
+
+const label = document.createElement('label');
+label.htmlFor = 'file-input';
+label.textContent = '+ Ajouter photo';
+
+const pImageFormat = document.createElement('p');
+pImageFormat.innerText = 'jpg, png: 4mo max';
+
+fileInput.addEventListener('change', function(event) {     // réagit aux changements, récupération de l'image//
+    const file = event.target.files[0];
+
+    /*if (file {
+        // Ici il faudra ajouter l'image au projet//
+    })*/
+})
+
+inputContainerFlex.appendChild(imageIcon);
+inputContainerFlex.appendChild(fileInput);
+inputContainerFlex.appendChild(label);
+modalContentAddBody.appendChild(modalAddInputContainer);
+inputContainerFlex.appendChild(pImageFormat);
+modalContentAdd.appendChild(modalContentAddBody);
+modalAddInputContainer.appendChild(inputContainerFlex);
 
 
+
+
+addImagesButton.addEventListener('click', () => {
+
+    modalContent.style.display = 'none';
+    modalContainer.appendChild(modalContentAdd);
+    modalContent = modalContentAdd;
+    modalContentAdd.style.display = 'block';
+})
 
 
 
