@@ -226,6 +226,14 @@ addImagesButton.addEventListener('click', () => {
     modalContentAdd.style.display = 'block';
 })
 
+arrowIcon.addEventListener('click', () => {
+    modalContentAdd.style.display = 'none';
+    modalContainer.appendChild(modalContent);
+    modalContentAdd = modalContent;
+    modalContent.style.display = 'block';
+})
+
+
 /*****Fonctions pour valider l'ajout d'images*****/
 
 validButton.addEventListener('click', function (e) {
@@ -255,7 +263,27 @@ function updateValidationFormColor() {
     }
 }
 
+/*****Affichage de l'image dans la modale avant de valider*****/
 
+fileInput.addEventListener('change', function(event) {
+    if (event.target.files.length > 0) {
+        const selectedFile = event.target.files[0];
+
+        if(selectedFile.type.startsWith('image/jpeg') || selectedFile.type.startsWith('image/png')) {
+            const imageElement = document.createElement('img');
+            imageElement.src = URL.createObjectURL(selectedFile);
+            imageElement.classList.add('selected-image')
+
+            modalAddInputContainer.innerHTML = '';
+            modalAddInputContainer.appendChild(imageElement);
+
+            imageElement.style.width = '30%';
+            imageElement.style.height = '100%';
+        } else {
+            alert("Veuillez sélectionner une image au format requis");
+        }
+    }
+});
 
 
 

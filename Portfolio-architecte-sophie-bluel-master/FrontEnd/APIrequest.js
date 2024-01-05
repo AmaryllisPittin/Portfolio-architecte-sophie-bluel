@@ -63,85 +63,48 @@ objectFilter.addEventListener('click', onFilterClick)
 appartementFilter.addEventListener('click', onFilterClick)
 hotelFilter.addEventListener('click', onFilterClick)
 
+/***************************POST Projets***********************************/
 
+document.addEventListener('DOMContentLoaded', () => {
+    const submitButton = document.querySelector('.modal-btn-valid');
+    const inputTitle = document.getElementById('title-input');
+    const inputCategory = document.getElementById('category-select');
+    const inputPhoto = document.querySelector('.selected-image');
 
+    submitButton.addEventListener('submit', (e) => {
+        e.preventDefault();
 
+        const formData = new FormData();
+        formData.append('title', inputTitle.value);
+        formData.append('category', inputCategory.value);
+        formData.append('imageUrl', inputPhoto.files[0]);
 
-
-
-
-
-
-/*
-fetch("http://localhost:5678/api/categories")
-.then(response => response.json())
-.then(categoriesData => {
-    const categories = categoriesData;
-
-    const objButton = document.getElementById('objButton');
-
-    objButton.addEventListener('click', () => {
-        const elementsToFilter = document.querySelectorAll('.gallery figure');
-
-        function filterChange(categories) {
-            return allProjects.filter((imagesTabs) => imagesTabs.categoryId === categories.id);
-        }
-
-        elementsToFilter.forEach(element => {
-            const categoryName = categories.name;
-            if (categoryName === "Objets") {
-                element.style.display ='block';
-            } else {
-                element.style.display ='none';
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Erreur lors de l\'ajout de la photo');
             }
-        });
-    });
+            return response.json();
+        })
+        .then(data => {
+            console.log('Projet ajouté avec succès:', data);
 
-    objButton.addEventListener('dblclick', () => {
-        const elementsToShow = document.querySelectorAll('.gallery figure');
-    
-        elementsToShow.forEach(element => {
-            element.style.display = 'block';
+            const newProject = {
+                title: inputTitle.value,
+                category: inputCategory.value,
+                imageUrl: inputPhoto.files[0] ? URL.createObjectURL(inputPhoto.files[0]) : ''
+            };
+            allProjects.push(newProject);
+            cloneAllProjects.push(newProject);
+
+            onFilterClick(allProjects);
+
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
         });
     });
 });
-
-
-
-
-
-
-
-/*
-fetch("http://localhost:5678/api/categories")
-.then(response => response.json())
-.then(categoriesData => {
-    const categories = categoriesData;
-
-    const objButton = document.getElementById('objButton');
-
-    objButton.addEventListener('click', () => {
-        const elementsToFilter = document.querySelectorAll('.gallery figure');
-
-        function filterChange(categories) {
-            return allProjects.filter((imagesTabs) => imagesTabs.categoryId === categories.id);
-        }
-
-        elementsToFilter.forEach(element => {
-            const categoryName = categories.name;
-            if (categoryName === "Objets") {
-                element.style.display ='block';
-            } else {
-                element.style.display ='none';
-            }
-        });
-    });
-
-    objButton.addEventListener('dblclick', () => {
-        const elementsToShow = document.querySelectorAll('.gallery figure');
-    
-        elementsToShow.forEach(element => {
-            element.style.display = 'block';
-        });
-    });
-});*/

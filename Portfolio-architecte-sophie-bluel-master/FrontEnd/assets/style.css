@@ -226,6 +226,27 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+.buttons-container {
+	display:flex;
+	flex-direction:row;
+	justify-content: center;
+
+}
+
+.filter-button {
+	border: solid 1px #1D6154;
+	border-radius:60px;
+	background-color: transparent;
+	padding:7px 20px 7px 20px;
+	margin-bottom:40px;
+	margin-left:10px;
+}
+
+.filter-button:active {
+	background-color: #1D6154;
+	color:white;
+}
+
 .index-submit {
 	margin : 2em auto ;
 }
@@ -309,7 +330,6 @@ footer nav ul {
 	height:650px;
 	max-width: 100vh;
 	padding:30px;
-	overflow:auto;
 	background-color: white;
 	border-radius: 17px;
 	display:flex;
@@ -339,6 +359,7 @@ footer nav ul {
 	right:0;
 	left:35px;
 	font-size:1.5em;
+	width:3%;
 }
 
 .modal-body {
@@ -437,6 +458,7 @@ footer nav ul {
 	background-color: #B9C5CC;
 	padding:15px 35px 15px 35px;
 	border-radius:25px;
+	cursor:pointer;
 }
 
 .input-container-flex p {
@@ -469,5 +491,9 @@ footer nav ul {
 	background-color: #B9C5CC;
 	border:none;
 	border-radius: 60px;
+	position:absolute;
+	top:240px;
+	left:105px;
+	cursor: pointer;
 }
 

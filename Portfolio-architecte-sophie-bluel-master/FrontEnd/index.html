@@ -55,10 +55,12 @@
 				</div>
 			</aside>
 		</div>
-		<button id="allButton" data-category="0">Tous</button>
-		<button id="objButton" data-category="1">Objets</button>
-		<button id="appButton" data-category="2">Appartements</button>
-		<button id="hrButton" data-category="3">Hôtels & Restaurants</button>
+		<div class="buttons-container">
+			<button class="filter-button" id="allButton" data-category="0">Tous</button>
+			<button class="filter-button" id="objButton" data-category="1">Objets</button>
+			<button class="filter-button" id="appButton" data-category="2">Appartements</button>
+			<button class="filter-button" id="hrButton" data-category="3">Hôtels & Restaurants</button>
+		</div>
 		<div class="gallery">
 
 		</div>
@@ -85,8 +87,8 @@
 		</ul>
 	</nav>
 </footer>
-<script src="APIrequest.js" type="module"></script>
 <script src="modal.js"></script>
 <script src="login.js" type="module"></script>
+<script src="APIrequest.js" type="module"></script>
 </body>
 </html>
