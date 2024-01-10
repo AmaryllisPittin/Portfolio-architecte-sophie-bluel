@@ -65,7 +65,7 @@ hotelFilter.addEventListener('click', onFilterClick)
 
 /***************************POST Projets***********************************/
 
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.querySelector('.modal-btn-valid');
     const inputTitle = document.getElementById('title-input');
     const inputCategory = document.getElementById('category-select');
@@ -107,4 +107,4 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Erreur:', error);
         });
     });
-});
+});*/

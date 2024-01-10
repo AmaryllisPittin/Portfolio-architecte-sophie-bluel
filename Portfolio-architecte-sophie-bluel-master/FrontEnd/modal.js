@@ -1,3 +1,57 @@
+function addSubmitListener() {
+    console.log('la fonction addSubmitListener a été déclenchée hihi');
+
+    const submitButton = document.querySelector('.modal-btn-valid');
+    const inputTitle = document.getElementById('title-input');
+    const inputCategory = document.getElementById('category-select');
+    const inputPhoto = document.querySelector('.selected-image');
+
+    submitButton.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('L\'évènement submit a été déclenché haha')
+
+        const formData = new FormData();
+        formData.append('title', inputTitle.value);
+        formData.append('category', inputCategory.value);
+        formData.append('imageUrl', inputPhoto.files[0]);
+
+        console.log('Données à envoyer hoho:', formData);
+
+        const token = sessionStorage.getItem('token');
+
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            'Authorization': `Bearer ${token}`
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Erreur lors de l\'ajout de la photo');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Projet ajouté avec succès:', data);
+
+            const newProject = {
+                title: inputTitle.value,
+                category: inputCategory.value,
+                imageUrl: inputPhoto.files[0] ? URL.createObjectURL(inputPhoto.files[0]) : ''
+            };
+            allProjects.push(newProject);
+            cloneAllProjects.push(newProject);
+
+            onFilterClick(allProjects);
+
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    });
+};
+
+/*******10 janvier****** */
+
 const overlay = document.getElementById('modal');
 const modal = document.getElementById('modal-content');
 
@@ -50,7 +104,7 @@ document.querySelectorAll('.portfolio-modified').forEach(a => {
     a.addEventListener('click', openModal);
 });
 
-/***Ajout de la gallerie à la modale***/
+/***Ajout de la galerie à la modale***/
 
 let allProjects = [];
 let cloneAllProjects = [];
@@ -180,11 +234,25 @@ validButton.classList.add('modal-btn-valid');
 validButton.innerText = 'Valider';
 
 fileInput.addEventListener('change', function(event) {     // réagit aux changements, récupération de l'image//
-    const file = event.target.files[0];
 
-    /*if (file {
-        // Ici il faudra ajouter l'image au projet//
-    })*/
+    if (event.target.files.length > 0) {
+        const selectedFile = event.target.files[0];
+
+        if(selectedFile.type.startsWith('image/jpeg') || selectedFile.type.startsWith('image/png')) {
+            const imageElement = document.createElement('img');
+            imageElement.src = URL.createObjectURL(selectedFile);
+            imageElement.classList.add('post-image');
+
+            modalAddInputContainer.innerHTML = '';
+            modalAddInputContainer.appendChild(imageElement);
+
+            const postedImageURL = URL.createObjectURL(selectedFile);
+
+            allProjects.push(postedImageURL);
+        } else {
+            alert('Veuillez sélectionner une image au format requis');
+        };
+    };
 })
 
 inputContainerFlex.appendChild(imageIcon);
@@ -235,11 +303,13 @@ arrowIcon.addEventListener('click', () => {
 
 
 /*****Fonctions pour valider l'ajout d'images*****/
+let errorMessage;
 
 validButton.addEventListener('click', function (e) {
+
     if (formTitleImage.value.length < 1 || selectCategory.value === '') {
         const errorMessageContainer = document.querySelector('.form-container');
-        const errorMessage = document.createElement('p');
+        errorMessage = document.createElement('p');
         errorMessage.innerText = 'Erreur: veuillez remplir les deux champs pour valider'
         errorMessage.style.display = 'block';
 
@@ -279,20 +349,25 @@ fileInput.addEventListener('change', function(event) {
 
             imageElement.style.width = '30%';
             imageElement.style.height = '100%';
-        } else {
-            alert("Veuillez sélectionner une image au format requis");
+
+            const postedImageURL = URL.createObjectURL(selectedFile);
+
+            allProjects.push ({
+                imageUrl: postedImageURL,
+                title: formTitleImage.value,
+                category: inputCategory.value
+            });
+
+            function refreshGallery() {
+                const elementContainer = document.querySelector('.modal-body');
+
+                allProjects.forEach(item => {
+                    const imgElement = document.createElement('img');
+                    const figureElement = document.createElement('figure');
+
+                    imgElement.src = item.imageUrl;
+                })
+            }
         }
     }
 });
-
-
-
-
-
-
-
-
-
-
-
-
