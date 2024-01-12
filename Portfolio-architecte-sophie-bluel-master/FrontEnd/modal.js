@@ -1,4 +1,5 @@
-function addSubmitListener() {
+/*Fonction pour ENVOYER le titre, la catégorie et l'image: au SUBMIT du bouton + AJOUTER dans la galerie*/
+/*function addSubmitListener() {
     console.log('la fonction addSubmitListener a été déclenchée hihi');
 
     const submitButton = document.querySelector('.modal-btn-valid');
@@ -50,7 +51,9 @@ function addSubmitListener() {
     });
 };
 
-/*******10 janvier****** */
+
+
+/*OUVERTURE de la modale*/
 
 const overlay = document.getElementById('modal');
 const modal = document.getElementById('modal-content');
@@ -79,6 +82,11 @@ const openModal = function (e) {
     }
 };
 
+
+
+
+/*FERMETURE de la modale*/
+
 const closeModal = function (e) {
     e.preventDefault();
     if(overlay === null) return;
@@ -104,7 +112,10 @@ document.querySelectorAll('.portfolio-modified').forEach(a => {
     a.addEventListener('click', openModal);
 });
 
-/***Ajout de la galerie à la modale***/
+
+
+
+/*FETCH pour la galerie de la PREMIERE MODALE + icone poubelle*/
 
 let allProjects = [];
 let cloneAllProjects = [];
@@ -135,7 +146,11 @@ fetch("http://localhost:5678/api/works")
     });
 });
 
-/*************************Création de la partie "Ajout photos"***********************/
+
+
+
+
+/*CREATION de la partie "AJOUT PHOTOS"*/
 
 let modalContent = document.querySelector('.modal-wrapper');
 const addImagesButton = document.querySelector('.modal-btn-add');
@@ -145,7 +160,11 @@ let modalContentAdd = document.createElement('div');
 modalContentAdd.classList.add('modal-add-wrapper');
 modalContentAdd.id = 'modal-content';
 
-/**header du modalContentAdd**/
+
+
+
+
+/*AJOUT PHOTOS: header du modalContentAdd**/
 const modalAddTitle = document.createElement('h3');
 modalAddTitle.innerText='Ajout photo';
 
@@ -160,7 +179,11 @@ modalContentAdd.appendChild(modalAddTitle);
 modalContentAdd.appendChild(arrowIcon);
 modalContentAdd.appendChild(xIcon);
 
-/**body du modalContentAdd**/
+
+
+
+
+/*AJOUT PHOTOS: body du modalContentAdd*/
 
 const modalContentAddBody = document.createElement('div');
 modalContentAddBody.classList.add('modal-add-body');
@@ -168,7 +191,12 @@ modalContentAddBody.classList.add('modal-add-body');
 const modalAddInputContainer = document.createElement('div');
 modalAddInputContainer.classList.add('input-container');
 
-/*Ce que contient le modalAddInputContainer*/
+
+
+
+
+
+/*AJOUT PHOTOS: Contenu du modalAddInputContainer pour importer le fichier image*/
 
 const inputContainerFlex = document.createElement('div');
 inputContainerFlex.classList.add('input-container-flex');
@@ -191,7 +219,11 @@ labelInsertImage.classList.add('insert-image-label');
 const pImageFormat = document.createElement('p');
 pImageFormat.innerText = 'jpg, png: 4mo max';
 
-/*Le formulaire*/
+
+
+
+
+/*AJOUT PHOTOS: Le formulaire*/
 
 const formContainer = document.createElement('div');
 formContainer.classList.add('form-container');
@@ -227,11 +259,19 @@ optionHrCategory.value = 'Hôtels & Restaurants';
 optionHrCategory.innerText = 'Hôtels & Restaurants';
 
 
-/*Submit de la modale d'ajout*/
+
+
+
+/*MODALE 1: création du bouton "Ajouter photo"*/
 
 const validButton = document.createElement('button');
 validButton.classList.add('modal-btn-valid');
 validButton.innerText = 'Valider';
+
+
+
+
+/*A DEPLACER: ENVOI de l'image / titre / catégorie*/
 
 fileInput.addEventListener('change', function(event) {     // réagit aux changements, récupération de l'image//
 
@@ -254,6 +294,11 @@ fileInput.addEventListener('change', function(event) {     // réagit aux change
         };
     };
 })
+
+
+
+
+/*MODALE 2: intégration des éléments*/
 
 inputContainerFlex.appendChild(imageIcon);
 inputContainerFlex.appendChild(fileInput);
@@ -281,28 +326,29 @@ modalContentAddBody.appendChild(formContainer);
 
 
 
+
+/*FERMETURE de la MODALE 2*/
+
 modalContentAdd.addEventListener('click', function(e) {
     stopPropagation(e);
 });
 
-document.getElementById('js-close-modal-icon').addEventListener('click', closeModal);
+modalContentAdd.querySelector('#js-close-modal-icon').addEventListener('click', closeModal);
 
 addImagesButton.addEventListener('click', () => {
     modalContent.style.display = 'none';
     modalContainer.appendChild(modalContentAdd);
-    modalContent = modalContentAdd;
     modalContentAdd.style.display = 'block';
 })
 
 arrowIcon.addEventListener('click', () => {
     modalContentAdd.style.display = 'none';
     modalContainer.appendChild(modalContent);
-    modalContentAdd = modalContent;
     modalContent.style.display = 'block';
 })
 
 
-/*****Fonctions pour valider l'ajout d'images*****/
+/*A DEPLACER/SUPPRIMER: Fonctions pour valider l'ajout d'images*/
 let errorMessage;
 
 validButton.addEventListener('click', function (e) {
@@ -333,9 +379,13 @@ function updateValidationFormColor() {
     }
 }
 
-/*****Affichage de l'image dans la modale avant de valider*****/
 
-fileInput.addEventListener('change', function(event) {
+
+
+
+/*MODALE 2: PRESENTATION de l'IMAGE dans la modale avant de valider*/
+
+/*fileInput.addEventListener('change', function(event) {
     if (event.target.files.length > 0) {
         const selectedFile = event.target.files[0];
 
@@ -371,3 +421,98 @@ fileInput.addEventListener('change', function(event) {
         }
     }
 });
+
+document.addEventListener('DOMContentLoaded', addSubmitListener);*/
+
+
+
+
+
+/*TENTATIVE DE CORRECTION début et fin*/
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    let inputTitle = document.getElementById('title-input');
+    let submitButton = document.querySelector('.modal-btn-valid');
+
+function addSubmitListener() {
+    console.log('la fonction addSubmitListener a été déclenchée hihi');
+
+    const inputCategory = document.getElementById('category-select');
+    const inputPhoto = document.querySelector('.selected-image');
+
+    submitButton.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('L\'évènement submit a été déclenché haha')
+
+        const formData = new FormData();
+        formData.append('title', inputTitle.value);
+        formData.append('category', inputCategory.value);
+        formData.append('imageUrl', inputPhoto.files[0]);
+
+        console.log('Données à envoyer hoho:', formData);
+
+        const token = sessionStorage.getItem('token');
+
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Erreur lors de l\'ajout de la photo');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Projet ajouté avec succès:', data);
+
+            const newProject = {
+                title: inputTitle.value,
+                category: inputCategory.value,
+                imageUrl: inputPhoto.files[0] ? URL.createObjectURL(inputPhoto.files[0]) : ''
+            };
+            allProjects.push(newProject);
+            cloneAllProjects.push(newProject);
+
+            onFilterClick(allProjects);
+
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    });
+};
+
+fileInput.addEventListener('change', function(event) {
+    if (event.target.files.length > 0) {
+        const selectedFile = event.target.files[0];
+
+        if(selectedFile.type.startsWith('image/jpeg') || selectedFile.type.startsWith('image/png')) {
+            const imageElement = document.createElement('img');
+            imageElement.src = URL.createObjectURL(selectedFile);
+            imageElement.classList.add('selected-image')
+
+            modalAddInputContainer.innerHTML = '';
+            modalAddInputContainer.appendChild(imageElement);
+
+            imageElement.style.width = '30%';
+            imageElement.style.height = '100%';
+
+            const postedImageURL = URL.createObjectURL(selectedFile);
+
+            const newProject = {
+                imageUrl: postedImageURL,
+                title: inputTitle.value,
+                category: inputCategory.value,
+            };
+
+            allProjects.push(newProject);
+            }
+        }
+    });
+    addSubmitListener();
+})

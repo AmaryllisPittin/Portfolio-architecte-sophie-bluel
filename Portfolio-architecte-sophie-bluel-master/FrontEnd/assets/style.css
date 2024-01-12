@@ -344,7 +344,7 @@ footer nav ul {
 	width:100%;
 	position:absolute;
 	top:8%; 
-	left:250px;
+	left: 38%;
 }
 
 .modal-wrapper i,
@@ -373,7 +373,7 @@ footer nav ul {
 	column-gap:0px;
 	box-sizing: border-box;
 	width:90%;
-	margin-left:5%;
+	margin-left:3%;
 }
 
 .modal-body img {
@@ -426,7 +426,6 @@ footer nav ul {
 	background-color: #1D6154;
 	position:absolute;
 	bottom:40px;
-	right:200px;
 }
 
 /*****modal add images*****/
