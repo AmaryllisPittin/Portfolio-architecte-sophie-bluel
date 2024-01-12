@@ -265,6 +265,7 @@ optionHrCategory.innerText = 'Hôtels & Restaurants';
 /*MODALE 1: création du bouton "Ajouter photo"*/
 
 const validButton = document.createElement('button');
+validButton.type = 'submit'
 validButton.classList.add('modal-btn-valid');
 validButton.innerText = 'Valider';
 
@@ -432,8 +433,9 @@ document.addEventListener('DOMContentLoaded', addSubmitListener);*/
 
 document.addEventListener('DOMContentLoaded', function() {
 
-    let inputTitle = document.getElementById('title-input');
-    let submitButton = document.querySelector('.modal-btn-valid');
+    const inputTitle = document.getElementById('title-input');
+    const submitButton = document.querySelector('.modal-btn-valid');
+    submitButton.type = 'submit';
 
 function addSubmitListener() {
     console.log('la fonction addSubmitListener a été déclenchée hihi');
