@@ -41,7 +41,7 @@ let loginConnexion = inputSubmitConnection.addEventListener('click', (a) => {
             sessionStorage.setItem('connected', JSON.stringify(true));
             sessionStorage.setItem('Token', data.token);
 
-            window.location.replace('index.html');
+            window.location.replace('index.html?loggedIn=true');
             const loginLinkOnIndex = document.getElementById('login-link');
             console.log(loginLinkOnIndex);
             loginLinkOnIndex.innerHTML = 'logout';

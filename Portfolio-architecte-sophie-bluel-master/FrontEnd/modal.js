@@ -1,17 +1,4 @@
 /****************************TENTATIVE DE RESTRUCTURATION**************************************************************************/
-
-/*CREATION de la partie MODALE 1*/
-
-let modalContent = document.querySelector('.modal-wrapper');
-const addImagesButton = document.querySelector('.modal-btn-add');
-const modalContainer = document.getElementById('modal')
-let modalContentAdd = document.createElement('div');
-
-modalContentAdd.classList.add('modal-add-wrapper');
-modalContentAdd.id = 'modal-content';
-
-
-
 /*OUVERTURE de la modale*/
 
 const overlay = document.getElementById('modal');
@@ -104,6 +91,20 @@ fetch("http://localhost:5678/api/works")
         figureElement.appendChild(spanBinElement);
     });
 });
+
+
+
+
+
+/*CREATION de la partie "AJOUT PHOTOS"*/
+
+let modalContent = document.querySelector('.modal-wrapper');
+const addImagesButton = document.querySelector('.modal-btn-add');
+const modalContainer = document.getElementById('modal')
+let modalContentAdd = document.createElement('div');
+
+modalContentAdd.classList.add('modal-add-wrapper');
+modalContentAdd.id = 'modal-content';
 
 
 
@@ -216,6 +217,33 @@ validButton.innerText = 'Valider';
 
 
 
+/*A DEPLACER: ENVOI de l'image / titre / catégorie*/
+
+fileInput.addEventListener('change', function(event) {     // réagit aux changements, récupération de l'image//
+
+    if (event.target.files.length > 0) {
+        const selectedFile = event.target.files[0];
+
+        if(selectedFile.type.startsWith('image/jpeg') || selectedFile.type.startsWith('image/png')) {
+            const imageElement = document.createElement('img');
+            imageElement.src = URL.createObjectURL(selectedFile);
+            imageElement.classList.add('post-image');
+
+            modalAddInputContainer.innerHTML = '';
+            modalAddInputContainer.appendChild(imageElement);
+
+            const postedImageURL = URL.createObjectURL(selectedFile);
+
+            allProjects.push(postedImageURL);
+        } else {
+            alert('Veuillez sélectionner une image au format requis');
+        };
+    };
+})
+
+
+
+
 /*MODALE 2: intégration des éléments*/
 
 inputContainerFlex.appendChild(imageIcon);
@@ -241,6 +269,169 @@ modalAddInputContainer.appendChild(inputContainerFlex);
 
 formContainer.appendChild(addImageForm);
 modalContentAddBody.appendChild(formContainer);
+
+
+
+
+/*ACCES + FERMETURE de la MODALE 2*/
+
+modalContentAdd.addEventListener('click', function(e) {
+    stopPropagation(e);
+});
+
+modalContentAdd.querySelector('#js-close-modal-icon').addEventListener('click', closeModal);
+
+addImagesButton.addEventListener('click', () => {
+    modalContent.style.display = 'none';
+    modalContainer.appendChild(modalContentAdd);
+    modalContentAdd.style.display = 'block';
+})
+
+arrowIcon.addEventListener('click', () => {
+    modalContentAdd.style.display = 'none';
+    modalContainer.appendChild(modalContent);
+    modalContent.style.display = 'block';
+})
+
+
+
+
+/*MODALE 2: PRESENTATION de l'IMAGE dans la modale avant de valider*/
+
+fileInput.addEventListener('change', function(event) {
+    if (event.target.files.length > 0) {
+        const selectedFile = event.target.files[0];
+
+        if(selectedFile.type.startsWith('image/jpeg') || selectedFile.type.startsWith('image/png')) {
+            const imageElement = document.createElement('img');
+            imageElement.src = URL.createObjectURL(selectedFile);
+            imageElement.classList.add('selected-image')
+
+            modalAddInputContainer.innerHTML = '';
+            modalAddInputContainer.appendChild(imageElement);
+
+            imageElement.style.width = '30%';
+            imageElement.style.height = '100%';
+
+            const postedImageURL = URL.createObjectURL(selectedFile);
+
+            allProjects.push ({
+                imageUrl: postedImageURL,
+                title: formTitleImage.value,
+                category: selectCategory.value
+            });
+
+            function refreshGallery() {
+                const elementContainer = document.querySelector('.modal-body');
+
+                allProjects.forEach(item => {
+                    const imgElement = document.createElement('img');
+                    const figureElement = document.createElement('figure');
+
+                    imgElement.src = item.imageUrl;
+                })
+            }
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', addSubmitListener);
+
+
+
+
+
+/*Fonction pour ENVOYER le titre, la catégorie et l'image: au SUBMIT du bouton + AJOUTER dans la galerie*/
+function addSubmitListener() {
+    console.log('la fonction addSubmitListener a été déclenchée');
+
+    const submitButton = document.querySelector('[type="submit"]');
+    const inputTitle = document.getElementById('title-input');
+    const inputCategory = document.getElementById('category-select');
+    const inputPhoto = document.querySelector('.selected-image');
+
+    submitButton.addEventListener('submit', (e) => {
+        e.preventDefault();
+        console.log('L\'évènement submit a été déclenché haha')
+
+        const formData = new FormData();
+        formData.append('title', inputTitle.value);
+        formData.append('category', inputCategory.value);
+        formData.append('imageUrl', inputPhoto.files[0]);
+
+        console.log('Données à envoyer hoho:', formData);
+
+        const token = sessionStorage.getItem('token');
+
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            body: formData,
+            headers: {
+            'Authorization': `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Erreur lors de l\'ajout de la photo');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Projet ajouté avec succès:', data);
+
+            const newProject = {
+                title: inputTitle.value,
+                category: inputCategory.value,
+                imageUrl: inputPhoto.files[0] ? URL.createObjectURL(inputPhoto.files[0]) : ''
+            };
+            allProjects.push(newProject);
+            cloneAllProjects.push(newProject);
+
+            onFilterClick(allProjects);
+
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+        });
+    });
+};
+
+
+
+
+
+/*A DEPLACER/SUPPRIMER: Fonctions pour valider l'ajout d'images*/
+let errorMessage;
+
+validButton.addEventListener('click', function (e) {
+
+    if (formTitleImage.value.length < 1 || selectCategory.value === '') {
+        const errorMessageContainer = document.querySelector('.form-container');
+        errorMessage = document.createElement('p');
+        errorMessage.innerText = 'Erreur: veuillez remplir les deux champs pour valider'
+        errorMessage.style.display = 'block';
+
+        errorMessageContainer.appendChild(errorMessage);
+        stopPropagation(e);
+
+    }
+});
+
+formTitleImage.addEventListener('input', function () {
+    errorMessage.style.display = 'none'
+});
+
+selectCategory.addEventListener('change', updateValidationFormColor)
+
+function updateValidationFormColor() {
+    if (formTitleImage.value.length >= 1 && selectCategory.value !== '') {
+        validButton.style.backgroundColor = '#1D6154';
+    } else {
+        validButton.style.backgroundColor = '';
+    }
+}
+
+
 
 
 
@@ -576,7 +767,7 @@ modalContentAddBody.appendChild(formContainer);
 
 
 
-/*FERMETURE de la MODALE 2*/
+/*ACCES + FERMETURE de la MODALE 2*/
 
 /*modalContentAdd.addEventListener('click', function(e) {
     stopPropagation(e);
@@ -595,6 +786,9 @@ arrowIcon.addEventListener('click', () => {
     modalContainer.appendChild(modalContent);
     modalContent.style.display = 'block';
 })
+
+
+
 
 
 /*A DEPLACER/SUPPRIMER: Fonctions pour valider l'ajout d'images*/
@@ -686,14 +880,14 @@ document.addEventListener('DOMContentLoaded', addSubmitListener);
     submitButton.type = 'submit';
 
 function addSubmitListener() {
-    console.log('la fonction addSubmitListener a été déclenchée hihi');
+    console.log('la fonction addSubmitListener a été déclenchée');
 
     const inputCategory = document.getElementById('category-select');
     const inputPhoto = document.querySelector('.selected-image');
 
     submitButton.addEventListener('submit', (e) => {
         e.preventDefault();
-        console.log('L\'évènement submit a été déclenché haha')
+        console.log('L\'évènement submit a été déclenché')
 
         const formData = new FormData();
         formData.append('title', inputTitle.value);

@@ -325,7 +325,8 @@ footer nav ul {
 }
 
 .modal-wrapper,
-.modal-add-wrapper {
+.modal-add-wrapper,
+.modal-gallery {
 	width:600px;
 	height:650px;
 	max-width: 100vh;

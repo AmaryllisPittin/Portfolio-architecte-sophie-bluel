@@ -43,15 +43,17 @@
 				<p>modifier</p>
 			</a>
 			<aside id="modal" class="portfolio-modal" aria-hidden="true" role="dialog" aria-modal="false" aria-labelledby="title-modal">
-				<div class="modal-wrapper" id="modal-content">
-					<h3 id="title-modal">Galerie photo</h3>
-					<i class="fa-solid fa-x" id="js-close-modal-icon"></i>
-					<div class="modal-body">
+				<div class="modal-wrapper modal-gallery" id="modal-content">
+					<!--<div class="modal-gallery" id="modal-gallery">-->
+						<h3 id="title-modal">Galerie photo</h3>
+						<i class="fa-solid fa-x" id="js-close-modal-icon"></i>
+						<div class="modal-body">
 						
-					</div>
-					<div class="modal-footer">
-						<button class="modal-btn-add">Ajouter une photo</button>
-					</div>
+						</div>
+						<div class="modal-footer">
+							<button class="modal-btn-add" id="add-work-btn">Ajouter une photo</button>
+						</div>
+					<!--</div>-->
 				</div>
 			</aside>
 		</div>
@@ -87,7 +89,10 @@
 		</ul>
 	</nav>
 </footer>
+<!--<script src="./modal/create-and-populate-modal.js"></script>
+<script src="./modal/create-add-work-section.js"></script>-->
 <script src="modal.js"></script>
 <script src="APIrequest.js" type="module"></script>
+<script src="main.js"></script>
 </body>
 </html>
