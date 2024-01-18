@@ -136,7 +136,8 @@ modalContentAddBody.classList.add('modal-add-body');
 const modalAddInputContainer = document.createElement('div');
 modalAddInputContainer.classList.add('input-container');
 
-
+modalContentAddBody.appendChild(modalAddInputContainer);
+modalContentAdd.appendChild(modalContentAddBody);
 
 
 
@@ -145,6 +146,7 @@ modalAddInputContainer.classList.add('input-container');
 
 const inputContainerFlex = document.createElement('div');
 inputContainerFlex.classList.add('input-container-flex');
+modalAddInputContainer.appendChild(inputContainerFlex);
 
 const imageIcon = document.createElement('i');
 imageIcon.classList.add('fa-regular', 'fa-image');
@@ -164,6 +166,10 @@ labelInsertImage.classList.add('insert-image-label');
 const pImageFormat = document.createElement('p');
 pImageFormat.innerText = 'jpg, png: 4mo max';
 
+inputContainerFlex.appendChild(imageIcon);
+inputContainerFlex.appendChild(fileInput);
+inputContainerFlex.appendChild(labelInsertImage);
+inputContainerFlex.appendChild(pImageFormat);
 
 
 
@@ -203,8 +209,18 @@ const optionHrCategory = document.createElement('option');
 optionHrCategory.value = 'Hôtels & Restaurants';
 optionHrCategory.innerText = 'Hôtels & Restaurants';
 
+addImageForm.appendChild(labelTitleImage);
+addImageForm.appendChild(formTitleImage);
+addImageForm.appendChild(labelCategoryImage);
 
+selectCategory.appendChild(optionCategory);
+selectCategory.appendChild(optionObjectCategory);
+selectCategory.appendChild(optionAppCategory);
+selectCategory.appendChild(optionHrCategory);
+addImageForm.appendChild(selectCategory);
 
+formContainer.appendChild(addImageForm);
+modalContentAddBody.appendChild(formContainer);
 
 
 /*MODALE 2: création du bouton "Valider"*/
@@ -214,6 +230,9 @@ validButton.type = 'submit'
 validButton.classList.add('modal-btn-valid');
 validButton.innerText = 'Valider';
 
+addImageForm.appendChild(validButton);
+
+
 
 
 function refreshGallery() {
@@ -221,7 +240,6 @@ function refreshGallery() {
 
     elementContainer.innerHTML = '';
 
-    // Ajouter les images existantes à la galerie
     allProjects.forEach(item => {
         const imgElement = document.createElement('img');
         const figureElement = document.createElement('figure');
@@ -232,7 +250,6 @@ function refreshGallery() {
         elementContainer.appendChild(figureElement);
     });
 
-    // Ajouter la nouvelle image à la galerie
     const newProject = allProjects[allProjects.length - 1];
     const imgElement = document.createElement('img');
     const figureElement = document.createElement('figure');
@@ -275,35 +292,6 @@ fileInput.addEventListener('change', function(event) {
         }
     }
 });
-
-
-
-
-/*MODALE 2: intégration des éléments*/
-
-inputContainerFlex.appendChild(imageIcon);
-inputContainerFlex.appendChild(fileInput);
-inputContainerFlex.appendChild(labelInsertImage);
-inputContainerFlex.appendChild(pImageFormat);
-
-addImageForm.appendChild(labelTitleImage);
-addImageForm.appendChild(formTitleImage);
-addImageForm.appendChild(labelCategoryImage);
-
-selectCategory.appendChild(optionCategory);
-selectCategory.appendChild(optionObjectCategory);
-selectCategory.appendChild(optionAppCategory);
-selectCategory.appendChild(optionHrCategory);
-addImageForm.appendChild(selectCategory);
-addImageForm.appendChild(validButton);
-
-modalContentAddBody.appendChild(modalAddInputContainer);
-
-modalContentAdd.appendChild(modalContentAddBody);
-modalAddInputContainer.appendChild(inputContainerFlex);
-
-formContainer.appendChild(addImageForm);
-modalContentAddBody.appendChild(formContainer);
 
 
 
