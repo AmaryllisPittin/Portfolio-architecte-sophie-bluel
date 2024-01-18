@@ -216,11 +216,40 @@ validButton.innerText = 'Valider';
 
 
 
+function refreshGallery() {
+    const elementContainer = document.querySelector('.gallery');
+
+    elementContainer.innerHTML = '';
+
+    // Ajouter les images existantes à la galerie
+    allProjects.forEach(item => {
+        const imgElement = document.createElement('img');
+        const figureElement = document.createElement('figure');
+
+        imgElement.src = item.imageUrl;
+
+        figureElement.appendChild(imgElement);
+        elementContainer.appendChild(figureElement);
+    });
+
+    // Ajouter la nouvelle image à la galerie
+    const newProject = allProjects[allProjects.length - 1];
+    const imgElement = document.createElement('img');
+    const figureElement = document.createElement('figure');
+
+    imgElement.src = newProject.imageUrl;
+
+    figureElement.appendChild(imgElement);
+    elementContainer.appendChild(figureElement);
+}
+
+
+
+
 
 /*A DEPLACER: ENVOI de l'image / titre / catégorie*/
 
-fileInput.addEventListener('change', function(event) {     // réagit aux changements, récupération de l'image//
-
+fileInput.addEventListener('change', function(event) {
     if (event.target.files.length > 0) {
         const selectedFile = event.target.files[0];
 
@@ -234,12 +263,18 @@ fileInput.addEventListener('change', function(event) {     // réagit aux change
 
             const postedImageURL = URL.createObjectURL(selectedFile);
 
-            allProjects.push(postedImageURL);
+            allProjects.push({
+                imageUrl: postedImageURL,
+                title: formTitleImage.value,
+                category: selectCategory.value
+            });
+    
+            refreshGallery();
         } else {
             alert('Veuillez sélectionner une image au format requis');
-        };
-    };
-})
+        }
+    }
+});
 
 
 
@@ -296,6 +331,7 @@ arrowIcon.addEventListener('click', () => {
 
 
 
+
 /*MODALE 2: PRESENTATION de l'IMAGE dans la modale avant de valider*/
 
 fileInput.addEventListener('change', function(event) {
@@ -321,7 +357,7 @@ fileInput.addEventListener('change', function(event) {
                 category: selectCategory.value
             });
 
-            function refreshGallery() {
+            /*function refreshGallery() {
                 const elementContainer = document.querySelector('.modal-body');
 
                 allProjects.forEach(item => {
@@ -330,7 +366,8 @@ fileInput.addEventListener('change', function(event) {
 
                     imgElement.src = item.imageUrl;
                 })
-            }
+            }*/
+
         }
     }
 });
@@ -401,10 +438,10 @@ function addSubmitListener() {
 
 
 /*A DEPLACER/SUPPRIMER: Fonctions pour valider l'ajout d'images*/
+
 let errorMessage;
 
 validButton.addEventListener('click', function (e) {
-
     if (formTitleImage.value.length < 1 || selectCategory.value === '') {
         const errorMessageContainer = document.querySelector('.form-container');
         errorMessage = document.createElement('p');
@@ -413,15 +450,16 @@ validButton.addEventListener('click', function (e) {
 
         errorMessageContainer.appendChild(errorMessage);
         stopPropagation(e);
-
     }
 });
 
 formTitleImage.addEventListener('input', function () {
-    errorMessage.style.display = 'none'
+    if (errorMessage) {
+        errorMessage.style.display = 'none';
+    }
 });
 
-selectCategory.addEventListener('change', updateValidationFormColor)
+selectCategory.addEventListener('change', updateValidationFormColor);
 
 function updateValidationFormColor() {
     if (formTitleImage.value.length >= 1 && selectCategory.value !== '') {
