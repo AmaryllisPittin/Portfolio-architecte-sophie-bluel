@@ -360,14 +360,71 @@ fileInput.addEventListener('change', function(event) {
     }
 });
 
-document.addEventListener('DOMContentLoaded', addSubmitListener);
+/*document.addEventListener('DOMContentLoaded', addSubmitListener);*/
 
+
+/*****ESSAI AJOUT IMAGES 23 janvier 7h23*****/
+fileInput.type = 'file';
+fileInput.accept = 'image/jpeg, image/png';
+fileInput.id = 'file-input';
+
+fileInput.addEventListener('change', function(event) {
+    updateSelectedFile(event);
+});
+
+// Fonction pour traiter la mise à jour du fichier sélectionné
+function updateSelectedFile(event) {
+    let selectedFile = event.target.files[0];
+    console.log("Fichier sélectionné :", selectedFile.name);
+}
+
+/*fileInput.addEventListener('change', function(event) {
+    let selectedFile = event.target.files[0];
+    console.log("Fichier sélectionné :", selectedFile.name);
+});*/
+
+modalContentAddBody.appendChild(fileInput);
+
+modalContentAddBody.addEventListener('submit', function(event) {
+    event.preventDefault();
+    addProject();
+});
+
+function addProject() {
+    let inputTitle = document.getElementById('title-input');
+    let inputCategory = document.getElementById('category-select');
+    let inputPhoto = document.getElementById('file-input');
+
+    let imageFile = inputPhoto.files[0];
+    let title = inputTitle.value;
+    let category = inputCategory.value;
+
+
+    if (imageFile && title && category) {
+
+        let newProject = {
+            image: imageFile,
+            title: title,
+            category: category
+        };
+
+        // Réinitialiser le formulaire
+        modalContentAddBody.querySelector('form').reset();
+
+        console.log("Projet ajouté :", newProject);
+        console.log("Nouveau tableau de projets :", allProjects);
+    } else {
+        alert("Veuillez remplir tous les champs du formulaire.");
+    }
+}
+
+/******/
 
 
 
 
 /*Fonction pour ENVOYER le titre, la catégorie et l'image: au SUBMIT du bouton + AJOUTER dans la galerie*/
-function addSubmitListener() {
+/*function addSubmitListener() {
     console.log('la fonction addSubmitListener a été déclenchée');
 
     const submitButton = document.querySelector('[type="submit"]');
@@ -419,7 +476,7 @@ function addSubmitListener() {
             console.error('Erreur:', error);
         });
     });
-};
+};*/
 
 
 
