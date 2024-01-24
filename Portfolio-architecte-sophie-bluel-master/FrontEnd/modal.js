@@ -1,8 +1,8 @@
 /****************************TENTATIVE DE RESTRUCTURATION**************************************************************************/
 /*OUVERTURE de la modale*/
 
-const overlay = document.getElementById('modal');
-const modal = document.getElementById('modal-content');
+let overlay = document.getElementById('modal');
+let modal = document.getElementById('modal-content');
 
 let modalOpened = false;
 
@@ -363,7 +363,7 @@ fileInput.addEventListener('change', function(event) {
 /*document.addEventListener('DOMContentLoaded', addSubmitListener);*/
 
 
-/*****ESSAI AJOUT IMAGES 23 janvier 7h23*****/
+/*****ESSAI AJOUT IMAGES 24 janvier 8h27*****/
 fileInput.type = 'file';
 fileInput.accept = 'image/jpeg, image/png';
 fileInput.id = 'file-input';
@@ -372,22 +372,17 @@ fileInput.addEventListener('change', function(event) {
     updateSelectedFile(event);
 });
 
-// Fonction pour traiter la mise à jour du fichier sélectionné
 function updateSelectedFile(event) {
     let selectedFile = event.target.files[0];
     console.log("Fichier sélectionné :", selectedFile.name);
 }
-
-/*fileInput.addEventListener('change', function(event) {
-    let selectedFile = event.target.files[0];
-    console.log("Fichier sélectionné :", selectedFile.name);
-});*/
 
 modalContentAddBody.appendChild(fileInput);
 
 modalContentAddBody.addEventListener('submit', function(event) {
     event.preventDefault();
     addProject();
+    closeModal(event);
 });
 
 function addProject() {
@@ -402,17 +397,39 @@ function addProject() {
 
     if (imageFile && title && category) {
 
-        let newProject = {
-            image: imageFile,
-            title: title,
-            category: category
-        };
+        let formData = new FormData();
+        formData.append('image', imageFile);
+        formData.append('title', title);
+        formData.append('category', category);
+
+        fetch('http://localhost:5678/api/works', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + 'token',
+            },
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Réponse de la requête POST :", data);
+            sessionStorage.setItem('added', JSON.stringify(true));
+            sessionStorage.setItem('Token', data.token);
+        })
+        .catch(error => {
+            console.error('Fetch error:', error);
+        });
 
         // Réinitialiser le formulaire
         modalContentAddBody.querySelector('form').reset();
 
-        console.log("Projet ajouté :", newProject);
+        console.log("Projet ajouté :", formData);
         console.log("Nouveau tableau de projets :", allProjects);
+
     } else {
         alert("Veuillez remplir tous les champs du formulaire.");
     }

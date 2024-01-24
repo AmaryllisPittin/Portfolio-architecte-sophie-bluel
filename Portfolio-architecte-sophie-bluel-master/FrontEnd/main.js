@@ -42,8 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const loginLinkOnIndex = document.getElementById('login-link');
             console.log(loginLinkOnIndex);
             loginLinkOnIndex.innerHTML = 'logout';
-        } else {
+        } /*else {
             console.error("l'élément avec l'ID 'login-link' n'a pas été trouvé.")
-        }
+        }*/
     }, 100);
 });
