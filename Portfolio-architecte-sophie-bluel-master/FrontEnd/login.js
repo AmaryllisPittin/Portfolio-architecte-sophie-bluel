@@ -112,14 +112,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-/****ESSAI 24 janvier: saloon*****/
+/****ESSAI 26 janvier: couloir manor*****/
 
 document.addEventListener('DOMContentLoaded', function () {
     const inputMail = document.getElementById('email');
     const inputPassword = document.getElementById('password');
     const inputSubmitConnection = document.querySelector('.login-submit');
     const errorMessageContainer = document.querySelector('.login-submit-and-link');
-    let loginLinkOnIndex;
+    let loginLinkOnIndex = document.getElementById('login-link');
 
     inputSubmitConnection.addEventListener('click', function (event) {
         event.preventDefault();
@@ -152,7 +152,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (data.message || data.errorMessage) {
                 alert('Erreur: identifiant ou mot de passe incorrects');
             } else {
-                // Stockez le token de manière sécurisée (localStorage, sessionStorage, etc.)
+                
                 sessionStorage.setItem('connected', JSON.stringify(true));
                 sessionStorage.setItem('Token', data.token);
 

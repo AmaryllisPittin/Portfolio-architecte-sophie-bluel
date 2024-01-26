@@ -345,6 +345,8 @@ fileInput.addEventListener('change', function(event) {
                 category: selectCategory.value
             });
 
+            console.log(postedImageURL, formTitleImage.value, selectCategory.value)
+
             /*function refreshGallery() {
                 const elementContainer = document.querySelector('.modal-body');
 
@@ -383,29 +385,27 @@ modalContentAddBody.addEventListener('submit', function(event) {
     event.preventDefault();
     addProject();
     closeModal(event);
+    addProject(event, token);
 });
 
 function addProject() {
-    let inputTitle = document.getElementById('title-input');
-    let inputCategory = document.getElementById('category-select');
+    let inputTitle = document.getElementById('title-input').value;
+    let inputCategory = document.getElementById('category-select').value;
     let inputPhoto = document.getElementById('file-input');
 
     let imageFile = inputPhoto.files[0];
-    let title = inputTitle.value;
-    let category = inputCategory.value;
 
-
-    if (imageFile && title && category) {
-
+    if (imageFile && inputTitle && inputCategory) {
         let formData = new FormData();
         formData.append('image', imageFile);
-        formData.append('title', title);
-        formData.append('category', category);
+        formData.append('title', inputTitle);
+        formData.append('category', inputCategory);
 
         fetch('http://localhost:5678/api/works', {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + 'token',
+                'Content-Type': 'multipart/form-data'
             },
             body: formData,
         })
@@ -424,12 +424,12 @@ function addProject() {
             console.error('Fetch error:', error);
         });
 
-        // Réinitialiser le formulaire
+        // Réinitialiser le formulaire et vider l'élément <input type="file">
         modalContentAddBody.querySelector('form').reset();
+        inputPhoto.value = '';
 
         console.log("Projet ajouté :", formData);
         console.log("Nouveau tableau de projets :", allProjects);
-
     } else {
         alert("Veuillez remplir tous les champs du formulaire.");
     }
