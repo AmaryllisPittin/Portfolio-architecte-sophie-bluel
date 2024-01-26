@@ -1,5 +1,8 @@
 /****************************TENTATIVE DE RESTRUCTURATION**************************************************************************/
 /*OUVERTURE de la modale*/
+/*import {token} from "./config";*/
+
+const token = sessionStorage.getItem("token")
 
 let overlay = document.getElementById('modal');
 let modal = document.getElementById('modal-content');
@@ -383,57 +386,47 @@ modalContentAddBody.appendChild(fileInput);
 
 modalContentAddBody.addEventListener('submit', function(event) {
     event.preventDefault();
-    addProject();
     closeModal(event);
-    addProject(event, token);
+    addProject();
 });
 
-function addProject() {
-    let inputTitle = document.getElementById('title-input').value;
-    let inputCategory = document.getElementById('category-select').value;
-    let inputPhoto = document.getElementById('file-input');
-
-    let imageFile = inputPhoto.files[0];
-
-    if (imageFile && inputTitle && inputCategory) {
-        let formData = new FormData();
-        formData.append('image', imageFile);
-        formData.append('title', inputTitle);
-        formData.append('category', inputCategory);
-
-        fetch('http://localhost:5678/api/works', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + 'token',
-                'Content-Type': 'multipart/form-data'
-            },
-            body: formData,
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Réponse de la requête POST :", data);
-            sessionStorage.setItem('added', JSON.stringify(true));
-            sessionStorage.setItem('Token', data.token);
-        })
-        .catch(error => {
-            console.error('Fetch error:', error);
-        });
-
-        // Réinitialiser le formulaire et vider l'élément <input type="file">
-        modalContentAddBody.querySelector('form').reset();
-        inputPhoto.value = '';
-
-        console.log("Projet ajouté :", formData);
-        console.log("Nouveau tableau de projets :", allProjects);
-    } else {
-        alert("Veuillez remplir tous les champs du formulaire.");
+const postWork = (token, formData) => {
+    fetch("http://localhost:5678/api/works", {
+      method: "POST",
+      headers: {
+        accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        console.error("Fetch error:", error);
+      });
+  };function addProject() {
+    let inputTitle = document.getElementById("title-input");
+    let inputCategory = document.getElementById("category-select");
+    let inputPhoto = document.getElementById("file-input");  const title = inputTitle.value;
+    const category = inputCategory.value;
+    const image = inputPhoto.files[0];
+    const token = sessionStorage.getItem("Token");  if (title && category && image) {
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("category", category);
+      formData.append("image", image);    postWork(token, formData);    // Réinitialiser le formulaire et vider l'élément <input type="file">
+      //     modalContentAddBody.querySelector("form").reset();
+      //     inputPhoto.value = "";    //     console.log("Projet ajouté :", formData);
+      //     console.log("Nouveau tableau de projets :", allProjects);
+      //   } else {
+      //     alert("Veuillez remplir tous les champs du formulaire.");
+      //   }
     }
-}
+  }
 
 /******/
 
