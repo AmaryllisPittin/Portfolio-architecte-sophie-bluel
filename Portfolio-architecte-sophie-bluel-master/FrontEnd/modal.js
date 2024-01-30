@@ -2,8 +2,7 @@
 /*OUVERTURE de la modale*/
 /*import {token} from "./config";*/
 
-const token = sessionStorage.getItem("token")
-
+const token = sessionStorage.getItem("Token");
 let overlay = document.getElementById('modal');
 let modal = document.getElementById('modal-content');
 
@@ -384,17 +383,11 @@ function updateSelectedFile(event) {
 
 modalContentAddBody.appendChild(fileInput);
 
-modalContentAddBody.addEventListener('submit', function(event) {
+/*const token = sessionStorage.getItem("Token");*/
+modalContentAddBody.addEventListener('submit', (event) => {
     event.preventDefault();
     closeModal(event);
-
-    const token = sessionStorage.getItem("Token");
-
-    if (/*sessionStorage.*/token) {
-        addProject(event, /*sessionStorage.*/token);
-    } else {
-        alert("Le token d'authentification est manquant.");
-    }
+    addProject(event, token); // Ajout du deuxième argument 'token'
 });
 
 async function addProject(event, token) {
@@ -423,8 +416,8 @@ async function addProject(event, token) {
             body: formData,
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+        if (response.ok) {
+            const responseData = await response.json();
         }
 
         // Si la requête est réussie, réinitialiser le formulaire et vider l'élément <input type="file">
@@ -432,7 +425,10 @@ async function addProject(event, token) {
         inputPhoto.value = "";
 
         console.log("Projet ajouté avec succès.");
+        console.log(allProjects)
+
         refreshGallery();
+
     } catch (error) {
         console.error("Fetch error:", error);
         alert("Une erreur s'est produite lors de l'ajout du projet.");
