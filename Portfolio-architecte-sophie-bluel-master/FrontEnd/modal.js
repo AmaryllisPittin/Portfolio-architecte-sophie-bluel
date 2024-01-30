@@ -269,7 +269,7 @@ function refreshGallery() {
 
 /*A DEPLACER: ENVOI de l'image / titre / catégorie*/
 
-fileInput.addEventListener('change', function(event) {
+/*fileInput.addEventListener('change', function(event) {
     if (event.target.files.length > 0) {
         const selectedFile = event.target.files[0];
 
@@ -294,7 +294,7 @@ fileInput.addEventListener('change', function(event) {
             alert('Veuillez sélectionner une image au format requis');
         }
     }
-});
+});*/
 
 
 
@@ -387,46 +387,57 @@ modalContentAddBody.appendChild(fileInput);
 modalContentAddBody.addEventListener('submit', function(event) {
     event.preventDefault();
     closeModal(event);
-    addProject();
+
+    const token = sessionStorage.getItem("Token");
+
+    if (/*sessionStorage.*/token) {
+        addProject(event, /*sessionStorage.*/token);
+    } else {
+        alert("Le token d'authentification est manquant.");
+    }
 });
 
-const postWork = (token, formData) => {
-    fetch("http://localhost:5678/api/works", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .catch((error) => {
-        console.error("Fetch error:", error);
-      });
-  };function addProject() {
+async function addProject(event, token) {
+    event.preventDefault();
+
     let inputTitle = document.getElementById("title-input");
     let inputCategory = document.getElementById("category-select");
-    let inputPhoto = document.getElementById("file-input");  const title = inputTitle.value;
+    let inputPhoto = document.getElementById("file-input");  
+    const title = inputTitle.value;
     const category = inputCategory.value;
     const image = inputPhoto.files[0];
-    const token = sessionStorage.getItem("Token");  if (title && category && image) {
-      const formData = new FormData();
-      formData.append("title", title);
-      formData.append("category", category);
-      formData.append("image", image);    postWork(token, formData);    // Réinitialiser le formulaire et vider l'élément <input type="file">
-      //     modalContentAddBody.querySelector("form").reset();
-      //     inputPhoto.value = "";    //     console.log("Projet ajouté :", formData);
-      //     console.log("Nouveau tableau de projets :", allProjects);
-      //   } else {
-      //     alert("Veuillez remplir tous les champs du formulaire.");
-      //   }
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("image", image);
+
+    try {
+        console.log(formData);
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                /*accept: "application/json",*/
+                Authorization: `Bearer ${/*sessionStorage.*/token}`,
+            },
+            body: formData,
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Si la requête est réussie, réinitialiser le formulaire et vider l'élément <input type="file">
+        modalContentAddBody.querySelector("form").reset();
+        inputPhoto.value = "";
+
+        console.log("Projet ajouté avec succès.");
+        refreshGallery();
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de l'ajout du projet.");
     }
-  }
+}
 
 /******/
 
