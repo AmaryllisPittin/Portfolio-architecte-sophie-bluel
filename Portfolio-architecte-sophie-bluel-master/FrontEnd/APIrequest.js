@@ -17,6 +17,8 @@ fetch("http://localhost:5678/api/works")
         titleElement.innerText = item.title;
 
         figureElement.dataset.categoryName = item.category;
+        figureElement.setAttribute('data-id', item.id);
+
         figureElement.appendChild(imgElement);
         figureElement.appendChild(titleElement);
         elementContainer.appendChild(figureElement);
