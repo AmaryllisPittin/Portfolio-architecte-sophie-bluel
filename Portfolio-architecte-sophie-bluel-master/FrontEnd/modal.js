@@ -1,6 +1,4 @@
-/****************************TENTATIVE DE RESTRUCTURATION**************************************************************************/
 /*OUVERTURE de la modale*/
-/*import {token} from "./config";*/
 
 const token = sessionStorage.getItem("Token");
 let overlay = document.getElementById('modal');
@@ -91,12 +89,13 @@ fetch("http://localhost:5678/api/works")
         binIcon.classList.add('fa-solid', 'fa-trash-can');
 
         binIcon.addEventListener('click', () => {
-            projectDeleted(item.id);
+            validationDeleteProject(item.id);
         });
 
         spanBinElement.appendChild(binIcon);
         figureElement.appendChild(spanBinElement);
     });
+    console.log(allProjects)
 });
 
 
@@ -574,3 +573,4 @@ async function validationDeleteProject(id) {
         }
     }
 }
+
