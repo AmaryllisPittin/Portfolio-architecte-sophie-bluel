@@ -29,8 +29,6 @@ const openModal = function (e) {
 };
 
 
-
-
 /*FERMETURE de la modale*/
 
 const closeModal = function (e) {
@@ -89,7 +87,7 @@ fetch("http://localhost:5678/api/works")
         binIcon.classList.add('fa-solid', 'fa-trash-can');
 
         binIcon.addEventListener('click', () => {
-            validationDeleteProject(item.id);
+            deleteProject(item.id);
         });
 
         spanBinElement.appendChild(binIcon);
@@ -343,34 +341,21 @@ fileInput.addEventListener('change', function(event) {
 
             const postedImageURL = URL.createObjectURL(selectedFile);
 
-            allProjects.push ({
+            /*allProjects.push ({
                 imageUrl: postedImageURL,
                 title: formTitleImage.value,
                 category: selectCategory.value
-            });
+            });*/
 
             console.log(postedImageURL, formTitleImage.value, selectCategory.value)
-
-            /*function refreshGallery() {
-                const elementContainer = document.querySelector('.modal-body');
-
-                allProjects.forEach(item => {
-                    const imgElement = document.createElement('img');
-                    const figureElement = document.createElement('figure');
-
-                    imgElement.src = item.imageUrl;
-                })
-            }*/
 
         }
     }
 });
 
-/*document.addEventListener('DOMContentLoaded', addSubmitListener);*/
-
 
 /*****ESSAI AJOUT IMAGES 24 janvier 8h27*****/
-fileInput.type = 'file';
+/*fileInput.type = 'file';
 fileInput.accept = 'image/jpeg, image/png';
 fileInput.id = 'file-input';
 
@@ -386,7 +371,7 @@ function updateSelectedFile(event) {
 modalContentAddBody.appendChild(fileInput);
 
 /*const token = sessionStorage.getItem("Token");*/
-modalContentAddBody.addEventListener('submit', (event) => {
+/*modalContentAddBody.addEventListener('submit', (event) => {
     event.preventDefault();
     closeModal(event);
     addProject(event, token); // Ajout du deuxième argument 'token'
@@ -433,6 +418,96 @@ async function addProject(event, token) {
     } catch (error) {
         console.error("Fetch error:", error);
         alert("Une erreur s'est produite lors de l'ajout du projet.");
+    }
+}*/
+
+/****TENTATIVE GET******/
+
+fileInput.type = 'file';
+fileInput.accept = 'image/jpeg, image/png';
+fileInput.id = 'file-input';
+
+fileInput.addEventListener('change', function(event) {
+    updateSelectedFile(event);
+});
+
+function updateSelectedFile(event) {
+    let selectedFile = event.target.files[0];
+    console.log("Fichier sélectionné :", selectedFile.name);
+}
+
+modalContentAddBody.appendChild(fileInput);
+
+modalContentAddBody.addEventListener('submit', (event) => {
+    event.preventDefault();
+    closeModal(event);
+    addProject(event, token); // Ajout du deuxième argument 'token'
+});
+
+async function addProject(event, token) {
+    event.preventDefault();
+
+    let inputTitle = document.getElementById("title-input");
+    let inputCategory = document.getElementById("category-select");
+    let inputPhoto = document.getElementById("file-input");  
+    const title = inputTitle.value;
+    const category = inputCategory.value;
+    const image = inputPhoto.files[0];
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("category", category);
+    formData.append("image", image);
+
+    try {
+        console.log(formData);
+        const response = await fetch("http://localhost:5678/api/works", {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+        });
+
+        if (response.ok) {
+            // Après un ajout réussi, récupérer les projets mis à jour
+            await fetchAndRefreshProjects(token);
+
+            // Réinitialiser le formulaire et vider l'élément <input type="file">
+            modalContentAddBody.querySelector("form").reset();
+            inputPhoto.value = "";
+
+            console.log("Projet ajouté avec succès.");
+        } else {
+            console.error("Erreur lors de la requête POST pour ajouter un projet");
+        }
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de l'ajout du projet.");
+    }
+}
+
+async function fetchAndRefreshProjects(token) {
+    try {
+        const getResponse = await fetch("http://localhost:5678/api/works", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (getResponse.ok) {
+            const allProjects = await getResponse.json();
+            console.log("Liste des projets mise à jour :", allProjects);
+            refreshGallery();
+        } else {
+            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
+        }
+
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
     }
 }
 
@@ -538,12 +613,12 @@ function updateValidationFormColor() {
 
 /****SUPRESSION DE PROJET****/
 
-async function deleteProject(id, token) {
+/*async function deleteProject(id, token) {
     try {
         const response = await fetch(`http://localhost:5678/api/works/${id}`, {
             method: 'DELETE',
             headers: {
-                accept: '*/*',
+                accept: '',
                 Authorization: `Bearer ${token}`,
             },
         });
@@ -553,6 +628,29 @@ async function deleteProject(id, token) {
         }
     } catch (error) {
         console.error('erreur lors de la suppression du projet:', error);
+    }
+}
+
+async function refreshGallery(token) {
+    try {
+        // Effectuer une requête GET pour récupérer toutes les données à jour
+        const getResponse = await fetch("http://localhost:5678/api/works", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (getResponse.ok) {
+            const allProjects = await getResponse.json();
+            console.log("Liste des projets mise à jour :", allProjects);
+            // Rafraîchir la galerie ici
+        } else {
+            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
     }
 }
 
@@ -571,6 +669,48 @@ async function validationDeleteProject(id) {
         if (projectDeletedOnModal) {
             projectDeletedOnModal.remove();
         }
+        console.log(projectDeleted);
+    }
+}*/
+
+async function deleteProject(id, token) {
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
+            method: 'DELETE',
+            headers: {
+                accept: '*/*',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (response.ok) {
+            window.alert('Le projet a été supprimé');
+            await refreshGallery(token); // Mettre à jour la galerie après la suppression
+        }
+    } catch (error) {
+        console.error('erreur lors de la suppression du projet:', error);
     }
 }
 
+async function refreshGallery(token) {
+    try {
+        // Effectuer une requête GET pour récupérer toutes les données à jour
+        const getResponse = await fetch("http://localhost:5678/api/works", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (getResponse.ok) {
+            const allProjects = await getResponse.json();
+            console.log("Liste des projets mise à jour :", allProjects);
+            // Mettre à jour votre galerie avec les données récupérées ici
+        } else {
+            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
+    }
+}

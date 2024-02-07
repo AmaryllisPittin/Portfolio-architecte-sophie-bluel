@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-/****ESSAI 26 janvier: couloir manor*****/
+/*********/
 
 document.addEventListener('DOMContentLoaded', function () {
     const inputMail = document.getElementById('email');
