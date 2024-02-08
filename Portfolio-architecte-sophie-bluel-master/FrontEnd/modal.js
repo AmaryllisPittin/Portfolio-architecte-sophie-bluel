@@ -1,3 +1,5 @@
+/*import { createGallery } from '../FrontEnd/APIrequest';*/
+
 /*OUVERTURE de la modale*/
 
 const token = sessionStorage.getItem("Token");
@@ -5,6 +7,10 @@ let overlay = document.getElementById('modal');
 let modal = document.getElementById('modal-content');
 
 let modalOpened = false;
+
+let binIcon;
+let arrowIcon;
+let xIcon;
 
 modal.addEventListener('click', function(e) {
     e.preventDefault();
@@ -87,7 +93,7 @@ fetch("http://localhost:5678/api/works")
         binIcon.classList.add('fa-solid', 'fa-trash-can');
 
         binIcon.addEventListener('click', () => {
-            deleteProject(item.id);
+            validationDeleteProject(item.id);
         });
 
         spanBinElement.appendChild(binIcon);
@@ -237,7 +243,7 @@ addImageForm.appendChild(validButton);
 
 
 
-function refreshGallery() {
+async function refreshGallery(token) {
     const elementContainer = document.querySelector('.gallery');
 
     elementContainer.innerHTML = '';
@@ -260,6 +266,27 @@ function refreshGallery() {
 
     figureElement.appendChild(imgElement);
     elementContainer.appendChild(figureElement);
+
+    try {
+        // Effectuer une requête GET pour récupérer toutes les données à jour
+        const getResponse = await fetch("http://localhost:5678/api/works", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (getResponse.ok) {
+            const allProjects = await getResponse.json();
+            console.log("Liste des projets mise à jour :", allProjects);
+            // Rafraîchir la galerie ici
+        } else {
+            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
+    }
 }
 
 
@@ -488,6 +515,7 @@ async function addProject(event, token) {
     }
 }
 
+/*TENTATIVE fetchandrefresh 14h24*/
 async function fetchAndRefreshProjects(token) {
     try {
         const getResponse = await fetch("http://localhost:5678/api/works", {
@@ -499,7 +527,28 @@ async function fetchAndRefreshProjects(token) {
 
         if (getResponse.ok) {
             const allProjects = await getResponse.json();
+            
+            function createGallery(imagesTabs) {
+                const elementContainer = document.querySelector('.gallery');
+                imagesTabs.forEach(item => {
+                    const figureElement = document.createElement('figure');
+                    const imgElement = document.createElement('img');
+                    const titleElement = document.createElement('figcaption');
+            
+                    imgElement.src = item.imageUrl;
+                    titleElement.innerText = item.title;
+            
+                    figureElement.dataset.categoryName = item.category;
+                    figureElement.setAttribute('data-id', item.id);
+            
+                    figureElement.appendChild(imgElement);
+                    figureElement.appendChild(titleElement);
+                    elementContainer.appendChild(figureElement);
+                });
+            }
+
             console.log("Liste des projets mise à jour :", allProjects);
+            createGallery(allProjects); // Passer allProjects à createGallery
             refreshGallery();
         } else {
             console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
@@ -613,7 +662,7 @@ function updateValidationFormColor() {
 
 /****SUPRESSION DE PROJET****/
 
-/*async function deleteProject(id, token) {
+async function deleteProject(id, token) {
     try {
         const response = await fetch(`http://localhost:5678/api/works/${id}`, {
             method: 'DELETE',
@@ -631,7 +680,7 @@ function updateValidationFormColor() {
     }
 }
 
-async function refreshGallery(token) {
+/*async function refreshGallery(token) {
     try {
         // Effectuer une requête GET pour récupérer toutes les données à jour
         const getResponse = await fetch("http://localhost:5678/api/works", {
@@ -652,7 +701,7 @@ async function refreshGallery(token) {
         console.error("Fetch error:", error);
         alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
     }
-}
+}*/
 
 async function validationDeleteProject(id) {
     const confirmation = confirm(
@@ -670,47 +719,5 @@ async function validationDeleteProject(id) {
             projectDeletedOnModal.remove();
         }
         console.log(projectDeleted);
-    }
-}*/
-
-async function deleteProject(id, token) {
-    try {
-        const response = await fetch(`http://localhost:5678/api/works/${id}`, {
-            method: 'DELETE',
-            headers: {
-                accept: '*/*',
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (response.ok) {
-            window.alert('Le projet a été supprimé');
-            await refreshGallery(token); // Mettre à jour la galerie après la suppression
-        }
-    } catch (error) {
-        console.error('erreur lors de la suppression du projet:', error);
-    }
-}
-
-async function refreshGallery(token) {
-    try {
-        // Effectuer une requête GET pour récupérer toutes les données à jour
-        const getResponse = await fetch("http://localhost:5678/api/works", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (getResponse.ok) {
-            const allProjects = await getResponse.json();
-            console.log("Liste des projets mise à jour :", allProjects);
-            // Mettre à jour votre galerie avec les données récupérées ici
-        } else {
-            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
     }
 }
