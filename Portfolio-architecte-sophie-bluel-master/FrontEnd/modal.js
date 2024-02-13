@@ -1,4 +1,4 @@
-/*import { createGallery } from '../FrontEnd/APIrequest';*/
+import { createGallery } from './APIrequest.js';
 
 /*OUVERTURE de la modale*/
 
@@ -68,13 +68,11 @@ document.querySelectorAll('.portfolio-modified').forEach(a => {
 /*FETCH pour la galerie de la PREMIERE MODALE + icone poubelle*/
 
 let allProjects = [];
-let cloneAllProjects = [];
 
 fetch("http://localhost:5678/api/works")
 .then(response => response.json())
 .then(imagesTabs => {
     allProjects = imagesTabs;
-    cloneAllProjects = imagesTabs;
     
     const elementContainer = document.querySelector('.modal-body');
     imagesTabs.forEach(item => {
@@ -468,7 +466,8 @@ modalContentAddBody.appendChild(fileInput);
 modalContentAddBody.addEventListener('submit', (event) => {
     event.preventDefault();
     closeModal(event);
-    addProject(event, token); // Ajout du deuxième argument 'token'
+    addProject(event, token);
+    refreshGallery(token);
 });
 
 async function addProject(event, token) {
@@ -487,7 +486,6 @@ async function addProject(event, token) {
     formData.append("image", image);
 
     try {
-        console.log(formData);
         const response = await fetch("http://localhost:5678/api/works", {
             method: "POST",
             headers: {
@@ -497,12 +495,18 @@ async function addProject(event, token) {
         });
 
         if (response.ok) {
-            // Après un ajout réussi, récupérer les projets mis à jour
-            await fetchAndRefreshProjects(token);
+            // Mettre à jour localStorage avec la nouvelle liste de projets
+            const updatedProjects = await fetchAndRefreshProjects(token);
+            localStorage.setItem('projects', JSON.stringify(updatedProjects));
 
             // Réinitialiser le formulaire et vider l'élément <input type="file">
             modalContentAddBody.querySelector("form").reset();
             inputPhoto.value = "";
+
+            // Mise à jour de la galerie d'images avec les nouveaux projets
+            /*createGallery(updatedProjects);*/
+            refreshGallery(token)
+            fetchAndRefreshProjects();
 
             console.log("Projet ajouté avec succès.");
         } else {
@@ -549,7 +553,7 @@ async function fetchAndRefreshProjects(token) {
 
             console.log("Liste des projets mise à jour :", allProjects);
             createGallery(allProjects); // Passer allProjects à createGallery
-            refreshGallery();
+            refreshGallery(allProjects);
         } else {
             console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
         }
