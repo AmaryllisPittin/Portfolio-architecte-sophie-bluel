@@ -266,7 +266,6 @@ async function refreshGallery(token) {
     elementContainer.appendChild(figureElement);
 
     try {
-        // Effectuer une requête GET pour récupérer toutes les données à jour
         const getResponse = await fetch("http://localhost:5678/api/works", {
             method: "GET",
             headers: {
@@ -277,7 +276,6 @@ async function refreshGallery(token) {
         if (getResponse.ok) {
             const allProjects = await getResponse.json();
             console.log("Liste des projets mise à jour :", allProjects);
-            // Rafraîchir la galerie ici
         } else {
             console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
         }
@@ -325,11 +323,18 @@ async function refreshGallery(token) {
 
 /*ACCES + FERMETURE de la MODALE 2*/
 
+/*modalContentAdd.addEventListener('click', function(e) {
+    stopPropagation(e);
+});
+
+modalContentAdd.querySelector('#js-close-modal-icon').addEventListener('click', closeModal);*/
+
 modalContentAdd.addEventListener('click', function(e) {
     stopPropagation(e);
 });
 
 modalContentAdd.querySelector('#js-close-modal-icon').addEventListener('click', closeModal);
+/** */
 
 addImagesButton.addEventListener('click', () => {
     modalContent.style.display = 'none';
@@ -446,7 +451,7 @@ async function addProject(event, token) {
     }
 }*/
 
-/****TENTATIVE GET******/
+/****TENTATIVE POST******/
 
 fileInput.type = 'file';
 fileInput.accept = 'image/jpeg, image/png';
@@ -495,18 +500,15 @@ async function addProject(event, token) {
         });
 
         if (response.ok) {
-            // Mettre à jour localStorage avec la nouvelle liste de projets
             const updatedProjects = await fetchAndRefreshProjects(token);
-            localStorage.setItem('projects', JSON.stringify(updatedProjects));
+            sessionStorage.setItem('projects', JSON.stringify(updatedProjects));
 
-            // Réinitialiser le formulaire et vider l'élément <input type="file">
             modalContentAddBody.querySelector("form").reset();
             inputPhoto.value = "";
 
-            // Mise à jour de la galerie d'images avec les nouveaux projets
             /*createGallery(updatedProjects);*/
             refreshGallery(token)
-            fetchAndRefreshProjects();
+            fetchAndRefreshProjects(token);
 
             console.log("Projet ajouté avec succès.");
         } else {
@@ -552,7 +554,7 @@ async function fetchAndRefreshProjects(token) {
             }
 
             console.log("Liste des projets mise à jour :", allProjects);
-            createGallery(allProjects); // Passer allProjects à createGallery
+            createGallery(allProjects);
             refreshGallery(allProjects);
         } else {
             console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
@@ -625,10 +627,7 @@ async function fetchAndRefreshProjects(token) {
 };*/
 
 
-
-
-
-/*A DEPLACER/SUPPRIMER: Fonctions pour valider l'ajout d'images*/
+/*Comportement de la modale d'ajout*/
 
 let errorMessage;
 
@@ -684,28 +683,7 @@ async function deleteProject(id, token) {
     }
 }
 
-/*async function refreshGallery(token) {
-    try {
-        // Effectuer une requête GET pour récupérer toutes les données à jour
-        const getResponse = await fetch("http://localhost:5678/api/works", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (getResponse.ok) {
-            const allProjects = await getResponse.json();
-            console.log("Liste des projets mise à jour :", allProjects);
-            // Rafraîchir la galerie ici
-        } else {
-            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
-    }
-}*/
+/** */
 
 async function validationDeleteProject(id) {
     const confirmation = confirm(
@@ -723,5 +701,6 @@ async function validationDeleteProject(id) {
             projectDeletedOnModal.remove();
         }
         console.log(projectDeleted);
+        closeModal();
     }
 }
