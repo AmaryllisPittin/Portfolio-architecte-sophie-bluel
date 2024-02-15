@@ -239,9 +239,46 @@ validButton.innerText = 'Valider';
 addImageForm.appendChild(validButton);
 
 
+function refreshModalAndHome() {
+    let elementContainerHome = document.querySelector('.gallery');
+    let elementContainerModal = document.querySelector('.modal-body');
 
+    try {
+        const getResponse = fetch("http://localhost:5678/api/works", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
 
-async function refreshGallery(token) {
+        if (getResponse.ok) {
+            const allProjects = getResponse.json();
+            console.log("Liste des projets mise à jour :", allProjects);
+
+            elementContainerHome.innerHTML = '';
+            elementContainerModal.innerHTML = '';
+
+            // Ajoute chaque projet à la galerie
+            allProjects.forEach(item => {
+                const imgElement = document.createElement('img');
+                const figureElement = document.createElement('figure');
+
+                imgElement.src = item.imageUrl;
+
+                figureElement.appendChild(imgElement);
+                elementContainerHome.appendChild(figureElement);
+                elementContainerModal.appendChild(figureElement);
+            });
+        } else {
+            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
+    }
+}
+
+/*async function refreshGallery(token) {
     const elementContainer = document.querySelector('.gallery');
 
     elementContainer.innerHTML = '';
@@ -283,40 +320,7 @@ async function refreshGallery(token) {
         console.error("Fetch error:", error);
         alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
     }
-}
-
-
-
-
-
-/*A DEPLACER: ENVOI de l'image / titre / catégorie*/
-
-/*fileInput.addEventListener('change', function(event) {
-    if (event.target.files.length > 0) {
-        const selectedFile = event.target.files[0];
-
-        if(selectedFile.type.startsWith('image/jpeg') || selectedFile.type.startsWith('image/png')) {
-            const imageElement = document.createElement('img');
-            imageElement.src = URL.createObjectURL(selectedFile);
-            imageElement.classList.add('post-image');
-
-            modalAddInputContainer.innerHTML = '';
-            modalAddInputContainer.appendChild(imageElement);
-
-            const postedImageURL = URL.createObjectURL(selectedFile);
-
-            allProjects.push({
-                imageUrl: postedImageURL,
-                title: formTitleImage.value,
-                category: selectCategory.value
-            });
-    
-            refreshGallery();
-        } else {
-            alert('Veuillez sélectionner une image au format requis');
-        }
-    }
-});*/
+}*/
 
 
 
@@ -383,74 +387,6 @@ fileInput.addEventListener('change', function(event) {
     }
 });
 
-
-/*****ESSAI AJOUT IMAGES 24 janvier 8h27*****/
-/*fileInput.type = 'file';
-fileInput.accept = 'image/jpeg, image/png';
-fileInput.id = 'file-input';
-
-fileInput.addEventListener('change', function(event) {
-    updateSelectedFile(event);
-});
-
-function updateSelectedFile(event) {
-    let selectedFile = event.target.files[0];
-    console.log("Fichier sélectionné :", selectedFile.name);
-}
-
-modalContentAddBody.appendChild(fileInput);
-
-/*const token = sessionStorage.getItem("Token");*/
-/*modalContentAddBody.addEventListener('submit', (event) => {
-    event.preventDefault();
-    closeModal(event);
-    addProject(event, token); // Ajout du deuxième argument 'token'
-});
-
-async function addProject(event, token) {
-    event.preventDefault();
-
-    let inputTitle = document.getElementById("title-input");
-    let inputCategory = document.getElementById("category-select");
-    let inputPhoto = document.getElementById("file-input");  
-    const title = inputTitle.value;
-    const category = inputCategory.value;
-    const image = inputPhoto.files[0];
-
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("category", category);
-    formData.append("image", image);
-
-    try {
-        console.log(formData);
-        const response = await fetch("http://localhost:5678/api/works", {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-            body: formData,
-        });
-
-        if (response.ok) {
-            const responseData = await response.json();
-        }
-
-        // Si la requête est réussie, réinitialiser le formulaire et vider l'élément <input type="file">
-        modalContentAddBody.querySelector("form").reset();
-        inputPhoto.value = "";
-
-        console.log("Projet ajouté avec succès.");
-        console.log(allProjects)
-
-        refreshGallery();
-
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de l'ajout du projet.");
-    }
-}*/
-
 /****TENTATIVE POST******/
 
 fileInput.type = 'file';
@@ -471,8 +407,8 @@ modalContentAddBody.appendChild(fileInput);
 modalContentAddBody.addEventListener('submit', (event) => {
     event.preventDefault();
     closeModal(event);
+    refreshModalAndHome(token);
     addProject(event, token);
-    refreshGallery(token);
 });
 
 async function addProject(event, token) {
@@ -500,16 +436,11 @@ async function addProject(event, token) {
         });
 
         if (response.ok) {
-            const updatedProjects = await fetchAndRefreshProjects(token);
-            sessionStorage.setItem('projects', JSON.stringify(updatedProjects));
+            /*const updatedProjects = await fetchAndRefreshProjects(token);
+            sessionStorage.setItem('projects', JSON.stringify(updatedProjects));*/
 
             modalContentAddBody.querySelector("form").reset();
             inputPhoto.value = "";
-
-            /*createGallery(updatedProjects);*/
-            refreshGallery(token)
-            fetchAndRefreshProjects(token);
-
             console.log("Projet ajouté avec succès.");
         } else {
             console.error("Erreur lors de la requête POST pour ajouter un projet");
@@ -522,7 +453,7 @@ async function addProject(event, token) {
 }
 
 /*TENTATIVE fetchandrefresh 14h24*/
-async function fetchAndRefreshProjects(token) {
+/*async function fetchAndRefreshProjects(token) {
     try {
         const getResponse = await fetch("http://localhost:5678/api/works", {
             method: "GET",
@@ -564,74 +495,14 @@ async function fetchAndRefreshProjects(token) {
         console.error("Fetch error:", error);
         alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
     }
-}
-
-/******/
-
-
-
-
-/*Fonction pour ENVOYER le titre, la catégorie et l'image: au SUBMIT du bouton + AJOUTER dans la galerie*/
-/*function addSubmitListener() {
-    console.log('la fonction addSubmitListener a été déclenchée');
-
-    const submitButton = document.querySelector('[type="submit"]');
-    const inputTitle = document.getElementById('title-input');
-    const inputCategory = document.getElementById('category-select');
-    const inputPhoto = document.querySelector('.selected-image');
-
-    submitButton.addEventListener('submit', (e) => {
-        e.preventDefault();
-        console.log('L\'évènement submit a été déclenché haha')
-
-        const formData = new FormData();
-        formData.append('title', inputTitle.value);
-        formData.append('category', inputCategory.value);
-        formData.append('imageUrl', inputPhoto.files[0]);
-
-        console.log('Données à envoyer hoho:', formData);
-
-        const token = sessionStorage.getItem('token');
-
-        fetch('http://localhost:5678/api/works', {
-            method: 'POST',
-            body: formData,
-            headers: {
-            'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if(!response.ok) {
-                throw new Error('Erreur lors de l\'ajout de la photo');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Projet ajouté avec succès:', data);
-
-            const newProject = {
-                title: inputTitle.value,
-                category: inputCategory.value,
-                imageUrl: inputPhoto.files[0] ? URL.createObjectURL(inputPhoto.files[0]) : ''
-            };
-            allProjects.push(newProject);
-            cloneAllProjects.push(newProject);
-
-            onFilterClick(allProjects);
-
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-        });
-    });
-};*/
+}*/
 
 
 /*Comportement de la modale d'ajout*/
 
 let errorMessage;
 
-validButton.addEventListener('click', function (e) {
+validButton.addEventListener('click', function () {
 
     if (formTitleImage.value.length < 1 || selectCategory.value === '') {
         const errorMessageContainer = document.querySelector('.form-container');
