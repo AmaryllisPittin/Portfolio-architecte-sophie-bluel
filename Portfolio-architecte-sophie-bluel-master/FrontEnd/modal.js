@@ -319,7 +319,6 @@ function updateSelectedFile(event) {
 
 modalContentAddBody.appendChild(fileInput);
 
-// Définissez la fonction addProject en dehors de l'événement submit
 async function addProject(event, token) {
     event.preventDefault();
 
@@ -347,13 +346,16 @@ async function addProject(event, token) {
         if (response.ok) {
             const newProject = await response.json();
 
-            // Créez un nouvel élément pour le projet dans la galerie
-            const figureGlobal = document.createFigureElement(newProject);
-
             const elementContainer = document.querySelector('.modal-body');
-            elementContainer.appendChild(figureGlobal);
+            const figureElement = document.createElement('figure');
+            const imgElement = document.createElement('img');
+            imgElement.src = newProject.imageUrl;
+
+            figureElement.appendChild(imgElement);
+            elementContainer.appendChild(figureElement);
 
             console.log("Projet ajouté avec succès.");
+
         } else {
             console.error("Erreur lors de la requête POST pour ajouter un projet");
             throw new Error("Échec de la requête POST");
