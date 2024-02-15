@@ -239,91 +239,6 @@ validButton.innerText = 'Valider';
 addImageForm.appendChild(validButton);
 
 
-function refreshModalAndHome() {
-    let elementContainerHome = document.querySelector('.gallery');
-    let elementContainerModal = document.querySelector('.modal-body');
-
-    try {
-        const getResponse = fetch("http://localhost:5678/api/works", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (getResponse.ok) {
-            const allProjects = getResponse.json();
-            console.log("Liste des projets mise à jour :", allProjects);
-
-            elementContainerHome.innerHTML = '';
-            elementContainerModal.innerHTML = '';
-
-            // Ajoute chaque projet à la galerie
-            allProjects.forEach(item => {
-                const imgElement = document.createElement('img');
-                const figureElement = document.createElement('figure');
-
-                imgElement.src = item.imageUrl;
-
-                figureElement.appendChild(imgElement);
-                elementContainerHome.appendChild(figureElement);
-                elementContainerModal.appendChild(figureElement);
-            });
-        } else {
-            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
-    }
-}
-
-/*async function refreshGallery(token) {
-    const elementContainer = document.querySelector('.gallery');
-
-    elementContainer.innerHTML = '';
-
-    allProjects.forEach(item => {
-        const imgElement = document.createElement('img');
-        const figureElement = document.createElement('figure');
-
-        imgElement.src = item.imageUrl;
-
-        figureElement.appendChild(imgElement);
-        elementContainer.appendChild(figureElement);
-    });
-
-    const newProject = allProjects[allProjects.length - 1];
-    const imgElement = document.createElement('img');
-    const figureElement = document.createElement('figure');
-
-    imgElement.src = newProject.imageUrl;
-
-    figureElement.appendChild(imgElement);
-    elementContainer.appendChild(figureElement);
-
-    try {
-        const getResponse = await fetch("http://localhost:5678/api/works", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (getResponse.ok) {
-            const allProjects = await getResponse.json();
-            console.log("Liste des projets mise à jour :", allProjects);
-        } else {
-            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
-        }
-    } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
-    }
-}*/
-
-
-
 
 /*ACCES + FERMETURE de la MODALE 2*/
 
@@ -404,13 +319,7 @@ function updateSelectedFile(event) {
 
 modalContentAddBody.appendChild(fileInput);
 
-modalContentAddBody.addEventListener('submit', (event) => {
-    event.preventDefault();
-    closeModal(event);
-    refreshModalAndHome(token);
-    addProject(event, token);
-});
-
+// Définissez la fonction addProject en dehors de l'événement submit
 async function addProject(event, token) {
     event.preventDefault();
 
@@ -436,66 +345,42 @@ async function addProject(event, token) {
         });
 
         if (response.ok) {
-            /*const updatedProjects = await fetchAndRefreshProjects(token);
-            sessionStorage.setItem('projects', JSON.stringify(updatedProjects));*/
+            const newProject = await response.json();
 
-            modalContentAddBody.querySelector("form").reset();
-            inputPhoto.value = "";
+            // Créez un nouvel élément pour le projet dans la galerie
+            const figureGlobal = document.createFigureElement(newProject);
+
+            const elementContainer = document.querySelector('.modal-body');
+            elementContainer.appendChild(figureGlobal);
+
             console.log("Projet ajouté avec succès.");
         } else {
             console.error("Erreur lors de la requête POST pour ajouter un projet");
+            throw new Error("Échec de la requête POST");
         }
-
     } catch (error) {
         console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de l'ajout du projet.");
+        throw new Error("Erreur lors de l'ajout du projet");
     }
 }
 
-/*TENTATIVE fetchandrefresh 14h24*/
-/*async function fetchAndRefreshProjects(token) {
+// Ajoutez l'écouteur d'événements pour le formulaire
+modalContentAddBody.addEventListener('submit', async (event) => {
+    event.preventDefault();
+
     try {
-        const getResponse = await fetch("http://localhost:5678/api/works", {
-            method: "GET",
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-
-        if (getResponse.ok) {
-            const allProjects = await getResponse.json();
-            
-            function createGallery(imagesTabs) {
-                const elementContainer = document.querySelector('.gallery');
-                imagesTabs.forEach(item => {
-                    const figureElement = document.createElement('figure');
-                    const imgElement = document.createElement('img');
-                    const titleElement = document.createElement('figcaption');
-            
-                    imgElement.src = item.imageUrl;
-                    titleElement.innerText = item.title;
-            
-                    figureElement.dataset.categoryName = item.category;
-                    figureElement.setAttribute('data-id', item.id);
-            
-                    figureElement.appendChild(imgElement);
-                    figureElement.appendChild(titleElement);
-                    elementContainer.appendChild(figureElement);
-                });
-            }
-
-            console.log("Liste des projets mise à jour :", allProjects);
-            createGallery(allProjects);
-            refreshGallery(allProjects);
-        } else {
-            console.error("Erreur lors de la requête GET pour récupérer les projets mis à jour");
-        }
-
+        // Ajout du projet à la galerie
+        await addProject(event, token);
+        
+        // Fermeture du modal après l'ajout du projet
+        closeModal(event);
     } catch (error) {
-        console.error("Fetch error:", error);
-        alert("Une erreur s'est produite lors de la récupération des projets mis à jour.");
+        console.error(error);
+        alert("Une erreur s'est produite lors de l'ajout du projet.");
     }
-}*/
+});
+
+
 
 
 /*Comportement de la modale d'ajout*/
