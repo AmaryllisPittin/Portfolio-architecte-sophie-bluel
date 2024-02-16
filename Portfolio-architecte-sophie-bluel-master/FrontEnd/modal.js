@@ -352,7 +352,13 @@ async function addProject(event, token) {
             imgElement.src = newProject.imageUrl;
 
             figureElement.appendChild(imgElement);
+            
+            // Ajout d'un identifiant ou d'une classe à l'élément figure
+            figureElement.classList.add('project-figure');
+
             elementContainer.appendChild(figureElement);
+            
+            allProjects.push(newProject);
 
             console.log("Projet ajouté avec succès.");
 
@@ -371,11 +377,11 @@ modalContentAddBody.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     try {
-        // Ajout du projet à la galerie
         await addProject(event, token);
         
-        // Fermeture du modal après l'ajout du projet
         closeModal(event);
+        console.log('Le code du submit fonctionne bel et bien')
+        console.log(allProjects)
     } catch (error) {
         console.error(error);
         alert("Une erreur s'est produite lors de l'ajout du projet.");
