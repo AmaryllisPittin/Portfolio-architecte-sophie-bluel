@@ -32,8 +32,7 @@ const openModal = function (e) {
 
 /*FERMETURE de la modale*/
 
-const closeModal = function (e) {
-    e.preventDefault();
+const closeModal = function () {
     if(overlay === null) return;
     if(overlay !== null) {
         overlay.style.display = 'none';
@@ -52,33 +51,39 @@ document.getElementById('portfolio-modified').addEventListener('click', openModa
 
 /*FETCH pour la galerie de la PREMIERE MODALE + icone poubelle*/
 
+// ...
+
 fetch("http://localhost:5678/api/works")
-.then(response => response.json())
-.then(imagesTabs => {
+  .then(response => response.json())
+  .then(imagesTabs => {
     const elementContainer = document.querySelector('.modal-body');
+
     imagesTabs.forEach(item => {
-        const imgElement = document.createElement('img');
-        const figureElement = document.createElement('figure');
-        figureElement.setAttribute('data-id', item.id);
+      const figureModalElement = document.createElement('figure');
+      figureModalElement.setAttribute('data-id', item.id);
 
-        imgElement.src = item.imageUrl;
+      const imgElement = document.createElement('img');
+      imgElement.src = item.imageUrl;
 
-        figureElement.appendChild(imgElement);
-        elementContainer.appendChild(figureElement);
+      const spanBinElement = document.createElement('span');
+      spanBinElement.classList.add('modal-span-bin');
 
-        const spanBinElement = document.createElement('span');
-        spanBinElement.classList.add('modal-span-bin');
-        binIcon = document.createElement('i');
-        binIcon.classList.add('fa-solid', 'fa-trash-can');
+      const binIcon = document.createElement('i');
+      binIcon.classList.add('fa-solid', 'fa-trash-can');
 
-        binIcon.addEventListener('click', () => {
-            validationDeleteProject(item.id);
-        });
+      binIcon.addEventListener('click', () => {
+        validationDeleteProject(item.id);
+      });
 
-        spanBinElement.appendChild(binIcon);
-        figureElement.appendChild(spanBinElement);
+      spanBinElement.appendChild(binIcon);
+      figureModalElement.appendChild(imgElement);
+      figureModalElement.appendChild(spanBinElement);
+
+      elementContainer.appendChild(figureModalElement);
     });
-});
+  });
+
+// ...
 
 
 /*CREATION de la partie "AJOUT PHOTOS"*/
@@ -306,10 +311,13 @@ async function addProject(event, token) {
             const imgElement = document.createElement('img');
             imgElement.src = newProject.imageUrl;
 
+            const titleElement = document.createElement('figcaption');
+            titleElement.innerText = newProject.title;
+
             figureElement.appendChild(imgElement);
-            
-            // Ajout d'un identifiant ou d'une classe à l'élément figure
+            figureElement.appendChild(titleElement);
             figureElement.classList.add('project-figure');
+
 
             elementContainer.appendChild(figureElement.cloneNode(true));
             gallery.appendChild(figureElement);
@@ -325,7 +333,6 @@ async function addProject(event, token) {
     }
 }
 
-// Ajoutez l'écouteur d'événements pour le formulaire
 modalContentAddBody.addEventListener('submit', async (event) => {
     event.preventDefault();
 
