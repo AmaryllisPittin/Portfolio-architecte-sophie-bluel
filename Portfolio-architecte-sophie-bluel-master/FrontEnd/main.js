@@ -1,12 +1,11 @@
-let portfolioModifyButton = document.querySelector(".portfolio-modified");
+let portfolioModifyButton = document.getElementById("portfolio-modified");
 let buttonsContainer = document.querySelector(".buttons-container");
 
 document.addEventListener('DOMContentLoaded', function () {
     setTimeout(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const loggedIn = urlParams.get('loggedIn');
+        const loggedIn = !!localStorage.getItem('token')
 
-        if (loggedIn === 'true') {
+        if (loggedIn) {
             const loginLinkOnIndex = document.getElementById('login-link');
             loginLinkOnIndex.innerHTML = 'logout';
             loginLinkOnIndex.style.cursor = 'pointer';
@@ -17,9 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
             loginLinkOnIndex.addEventListener('click', function() {
                 const confirmation = confirm("Êtes-vous sûr de vouloir vous déconnecter ?");
                 if (confirmation) {
-                    sessionStorage.removeItem('connected');
-                    sessionStorage.removeItem('Token');
-                    window.location.href = '/';
+                    localStorage.removeItem('token');
+                    window.location.reload();
                 }
             });
         } else {

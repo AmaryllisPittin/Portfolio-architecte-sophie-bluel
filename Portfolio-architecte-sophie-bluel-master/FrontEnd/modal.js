@@ -1,12 +1,8 @@
-import { createGallery } from './APIrequest.js';
-
 /*OUVERTURE de la modale*/
 
-const token = sessionStorage.getItem("Token");
+const token = localStorage.getItem("token");
 let overlay = document.getElementById('modal');
 let modal = document.getElementById('modal-content');
-
-let modalOpened = false;
 
 let binIcon;
 let arrowIcon;
@@ -28,7 +24,6 @@ const openModal = function (e) {
 
         overlay.addEventListener('click', closeModal);
         document.getElementById('js-close-modal-icon').addEventListener('click', closeModal);
-        modalOpened = true;
     } else {
         console.log('la cible n\'a pas été trouvée / ou est null');
     }
@@ -44,11 +39,6 @@ const closeModal = function (e) {
         overlay.style.display = 'none';
         overlay.setAttribute('aria-hidden', 'true');
         overlay.removeAttribute('aria-modal');
-        overlay.removeEventListener('click', closeModal);
-        document.getElementById('js-close-modal-icon').removeEventListener('click', closeModal);
-        overlay = null;
-
-        modalOpened = false;
     } else {
         console.log('la cible n\'a pas été trouvée / ou est null');
     }
@@ -58,22 +48,13 @@ const stopPropagation = function (e) {
     e.stopPropagation();
 }
 
-document.querySelectorAll('.portfolio-modified').forEach(a => {
-    a.addEventListener('click', openModal);
-});
-
-
-
+document.getElementById('portfolio-modified').addEventListener('click', openModal);
 
 /*FETCH pour la galerie de la PREMIERE MODALE + icone poubelle*/
-
-let allProjects = [];
 
 fetch("http://localhost:5678/api/works")
 .then(response => response.json())
 .then(imagesTabs => {
-    allProjects = imagesTabs;
-    
     const elementContainer = document.querySelector('.modal-body');
     imagesTabs.forEach(item => {
         const imgElement = document.createElement('img');
@@ -97,9 +78,7 @@ fetch("http://localhost:5678/api/works")
         spanBinElement.appendChild(binIcon);
         figureElement.appendChild(spanBinElement);
     });
-    console.log(allProjects)
 });
-
 
 
 /*CREATION de la partie "AJOUT PHOTOS"*/
@@ -111,8 +90,6 @@ let modalContentAdd = document.createElement('div');
 
 modalContentAdd.classList.add('modal-add-wrapper');
 modalContentAdd.id = 'modal-content';
-
-
 
 
 /*MODALE 2: header du modalContentAdd**/
@@ -131,9 +108,6 @@ modalContentAdd.appendChild(arrowIcon);
 modalContentAdd.appendChild(xIcon);
 
 
-
-
-
 /*AJOUT PHOTOS: body du modalContentAdd*/
 
 const modalContentAddBody = document.createElement('div');
@@ -144,8 +118,6 @@ modalAddInputContainer.classList.add('input-container');
 
 modalContentAddBody.appendChild(modalAddInputContainer);
 modalContentAdd.appendChild(modalContentAddBody);
-
-
 
 
 /*AJOUT PHOTOS: Contenu du modalAddInputContainer pour importer le fichier image*/
@@ -239,15 +211,6 @@ validButton.innerText = 'Valider';
 addImageForm.appendChild(validButton);
 
 
-
-/*ACCES + FERMETURE de la MODALE 2*/
-
-/*modalContentAdd.addEventListener('click', function(e) {
-    stopPropagation(e);
-});
-
-modalContentAdd.querySelector('#js-close-modal-icon').addEventListener('click', closeModal);*/
-
 modalContentAdd.addEventListener('click', function(e) {
     stopPropagation(e);
 });
@@ -267,10 +230,6 @@ arrowIcon.addEventListener('click', () => {
     modalContent.style.display = 'block';
 })
 
-
-
-
-
 /*MODALE 2: PRESENTATION de l'IMAGE dans la modale avant de valider*/
 
 fileInput.addEventListener('change', function(event) {
@@ -287,17 +246,6 @@ fileInput.addEventListener('change', function(event) {
 
             imageElement.style.width = '30%';
             imageElement.style.height = '100%';
-
-            const postedImageURL = URL.createObjectURL(selectedFile);
-
-            /*allProjects.push ({
-                imageUrl: postedImageURL,
-                title: formTitleImage.value,
-                category: selectCategory.value
-            });*/
-
-            console.log(postedImageURL, formTitleImage.value, selectCategory.value)
-
         }
     }
 });
@@ -347,7 +295,14 @@ async function addProject(event, token) {
             const newProject = await response.json();
 
             const elementContainer = document.querySelector('.modal-body');
+            const gallery = document.querySelector('.gallery');
+
             const figureElement = document.createElement('figure');
+            console.log('newProject', newProject);
+            
+            const id = newProject.id;
+            figureElement.setAttribute('data-id', id);
+
             const imgElement = document.createElement('img');
             imgElement.src = newProject.imageUrl;
 
@@ -356,12 +311,10 @@ async function addProject(event, token) {
             // Ajout d'un identifiant ou d'une classe à l'élément figure
             figureElement.classList.add('project-figure');
 
-            elementContainer.appendChild(figureElement);
+            elementContainer.appendChild(figureElement.cloneNode(true));
+            gallery.appendChild(figureElement);
             
-            allProjects.push(newProject);
-
             console.log("Projet ajouté avec succès.");
-
         } else {
             console.error("Erreur lors de la requête POST pour ajouter un projet");
             throw new Error("Échec de la requête POST");
@@ -378,25 +331,18 @@ modalContentAddBody.addEventListener('submit', async (event) => {
 
     try {
         await addProject(event, token);
-        
         closeModal(event);
-        console.log('Le code du submit fonctionne bel et bien')
-        console.log(allProjects)
     } catch (error) {
         console.error(error);
         alert("Une erreur s'est produite lors de l'ajout du projet.");
     }
 });
 
-
-
-
 /*Comportement de la modale d'ajout*/
 
 let errorMessage;
 
 validButton.addEventListener('click', function () {
-
     if (formTitleImage.value.length < 1 || selectCategory.value === '') {
         const errorMessageContainer = document.querySelector('.form-container');
         errorMessage = document.createElement('p');
@@ -423,9 +369,6 @@ function updateValidationFormColor() {
         validButton.style.backgroundColor = '';
     }
 }
-
-
-
 
 /****SUPRESSION DE PROJET****/
 
@@ -455,16 +398,10 @@ async function validationDeleteProject(id) {
     );
     if (confirmation) {
         await deleteProject(id, token);
-        const projectDeleted = document.querySelector(`[data-id="${id}"]`);
-        if (projectDeleted) {
-            projectDeleted.remove();
+        const projectDeleted = document.querySelectorAll(`[data-id="${id}"]`);
+        if (projectDeleted && projectDeleted.length) {
+            projectDeleted.forEach(element => element.remove())
         }
-
-        const projectDeletedOnModal = document.querySelector(`.modal-body [data-id="${id}"]`);
-        if (projectDeletedOnModal) {
-            projectDeletedOnModal.remove();
-        }
-        console.log(projectDeleted);
         closeModal();
     }
 }
