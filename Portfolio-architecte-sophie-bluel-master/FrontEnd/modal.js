@@ -1,3 +1,7 @@
+import { allProjects } from './APIrequest.js';
+import { cloneAllProjects } from './APIrequest.js';
+import { onFilterClick } from './APIrequest.js';
+
 /*OUVERTURE de la modale*/
 
 const token = localStorage.getItem("token");
@@ -51,39 +55,33 @@ document.getElementById('portfolio-modified').addEventListener('click', openModa
 
 /*FETCH pour la galerie de la PREMIERE MODALE + icone poubelle*/
 
-// ...
-
 fetch("http://localhost:5678/api/works")
-  .then(response => response.json())
-  .then(imagesTabs => {
+.then(response => response.json())
+.then(imagesTabs => {
     const elementContainer = document.querySelector('.modal-body');
-
     imagesTabs.forEach(item => {
-      const figureModalElement = document.createElement('figure');
-      figureModalElement.setAttribute('data-id', item.id);
+        const imgElement = document.createElement('img');
+        const figureElement = document.createElement('figure');
+        figureElement.setAttribute('data-id', item.id);
 
-      const imgElement = document.createElement('img');
-      imgElement.src = item.imageUrl;
+        imgElement.src = item.imageUrl;
 
-      const spanBinElement = document.createElement('span');
-      spanBinElement.classList.add('modal-span-bin');
+        figureElement.appendChild(imgElement);
+        elementContainer.appendChild(figureElement);
 
-      const binIcon = document.createElement('i');
-      binIcon.classList.add('fa-solid', 'fa-trash-can');
+        const spanBinElement = document.createElement('span');
+        spanBinElement.classList.add('modal-span-bin');
+        binIcon = document.createElement('i');
+        binIcon.classList.add('fa-solid', 'fa-trash-can');
 
-      binIcon.addEventListener('click', () => {
-        validationDeleteProject(item.id);
-      });
+        binIcon.addEventListener('click', () => {
+            validationDeleteProject(item.id);
+        });
 
-      spanBinElement.appendChild(binIcon);
-      figureModalElement.appendChild(imgElement);
-      figureModalElement.appendChild(spanBinElement);
-
-      elementContainer.appendChild(figureModalElement);
+        spanBinElement.appendChild(binIcon);
+        figureElement.appendChild(spanBinElement);
     });
-  });
-
-// ...
+});
 
 
 /*CREATION de la partie "AJOUT PHOTOS"*/
@@ -303,24 +301,39 @@ async function addProject(event, token) {
             const gallery = document.querySelector('.gallery');
 
             const figureElement = document.createElement('figure');
-            console.log('newProject', newProject);
+            const figureModalElement = document.createElement('figure');
             
             const id = newProject.id;
             figureElement.setAttribute('data-id', id);
+            figureModalElement.setAttribute('data-id', id);
 
             const imgElement = document.createElement('img');
             imgElement.src = newProject.imageUrl;
-
             const titleElement = document.createElement('figcaption');
             titleElement.innerText = newProject.title;
 
+            const spanBinElement = document.createElement('span');
+            spanBinElement.classList.add('modal-span-bin');
+            binIcon = document.createElement('i');
+            binIcon.classList.add('fa-solid', 'fa-trash-can');
+
+            binIcon.addEventListener('click', () => {
+                validationDeleteProject(item.id);
+            });
+
+            figureModalElement.appendChild(imgElement);
+            spanBinElement.appendChild(binIcon);
+            figureModalElement.appendChild(spanBinElement);
+            
             figureElement.appendChild(imgElement);
             figureElement.appendChild(titleElement);
             figureElement.classList.add('project-figure');
 
-
-            elementContainer.appendChild(figureElement.cloneNode(true));
+            elementContainer.appendChild(figureModalElement);
             gallery.appendChild(figureElement);
+            
+            allProjects.push(newProject);
+            cloneAllProjects.push(newProject);
             
             console.log("Projet ajouté avec succès.");
         } else {
@@ -333,6 +346,7 @@ async function addProject(event, token) {
     }
 }
 
+// Ajoutez l'écouteur d'événements pour le formulaire
 modalContentAddBody.addEventListener('submit', async (event) => {
     event.preventDefault();
 

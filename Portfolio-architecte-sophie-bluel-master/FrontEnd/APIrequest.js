@@ -1,5 +1,5 @@
-let allProjects = [];
-let cloneAllProjects = [];
+export let allProjects = [];
+export let cloneAllProjects = [];
 
 export function createGallery(imagesTabs) {
     const elementContainer = document.querySelector('.gallery');
@@ -35,34 +35,36 @@ fetch("http://localhost:5678/api/works", {
     /*** */
 
 
-function onFilterClick(event){
-    const filterButton = event.target;
-    const categoryValue = +filterButton.dataset.category;
-    const elementContainer = document.querySelector('.gallery');
-
-    elementContainer.innerHTML = '';
+    export function onFilterClick(event) {
+        const filterButton = event.target;
+        const categoryValue = +filterButton.dataset.category;
     
-    let filtredProjects;
-
-    if(categoryValue === 0){
-        filtredProjects = allProjects;
-    } else {
-        filtredProjects = allProjects.filter(item => item.categoryId === categoryValue);
+        let filtredProjects;
+    
+        if (categoryValue === 0) {
+            filtredProjects = allProjects;
+        } else {
+            filtredProjects = allProjects.filter(item => item.categoryId === categoryValue);
+        }
+    
+        const elementContainer = document.querySelector('.gallery');
+        elementContainer.innerHTML = '';
+    
+        filtredProjects.forEach(item => {
+            const figureElement = document.createElement('figure');
+            const imgElement = document.createElement('img');
+            const titleElement = document.createElement('figcaption');
+    
+            imgElement.src = item.imageUrl;
+            titleElement.innerText = item.title;
+    
+            figureElement.appendChild(imgElement);
+            figureElement.appendChild(titleElement);
+            elementContainer.appendChild(figureElement);
+        });
     }
-
-    filtredProjects.forEach(item => {
-        const figureElement = document.createElement('figure');
-        const imgElement = document.createElement('img');
-        const titleElement = document.createElement('figcaption');
-
-        imgElement.src = item.imageUrl;
-        titleElement.innerText = item.title;
-
-        figureElement.appendChild(imgElement);
-        figureElement.appendChild(titleElement);
-        elementContainer.appendChild(figureElement);
-    });
-};
+    
+    
 
 const allFilter = document.getElementById('allButton');
 const objectFilter = document.getElementById('objButton');
