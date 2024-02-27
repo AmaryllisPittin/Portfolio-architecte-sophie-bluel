@@ -258,33 +258,26 @@ fileInput.addEventListener('change', function(event) {
 fileInput.type = 'file';
 fileInput.accept = 'image/jpeg, image/png';
 fileInput.id = 'file-input';
-
 fileInput.addEventListener('change', function(event) {
     updateSelectedFile(event);
 });
-
 function updateSelectedFile(event) {
     let selectedFile = event.target.files[0];
     console.log("Fichier sélectionné :", selectedFile.name);
 }
-
 modalContentAddBody.appendChild(fileInput);
-
 async function addProject(event, token) {
     event.preventDefault();
-
     let inputTitle = document.getElementById("title-input");
     let inputCategory = document.getElementById("category-select");
     let inputPhoto = document.getElementById("file-input");  
     const title = inputTitle.value;
     const category = inputCategory.value;
     const image = inputPhoto.files[0];
-
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
     formData.append("image", image);
-
     try {
         const response = await fetch("http://localhost:5678/api/works", {
             method: "POST",
@@ -293,7 +286,6 @@ async function addProject(event, token) {
             },
             body: formData,
         });
-
         if (response.ok) {
             const newProject = await response.json();
 
@@ -301,39 +293,28 @@ async function addProject(event, token) {
             const gallery = document.querySelector('.gallery');
 
             const figureElement = document.createElement('figure');
-            const figureModalElement = document.createElement('figure');
-            
+            console.log('newProject', newProject);
+
             const id = newProject.id;
             figureElement.setAttribute('data-id', id);
-            figureModalElement.setAttribute('data-id', id);
 
             const imgElement = document.createElement('img');
             imgElement.src = newProject.imageUrl;
+
             const titleElement = document.createElement('figcaption');
-            titleElement.innerText = newProject.title;
+            titleElement.innerText = inputTitle.value;
 
-            const spanBinElement = document.createElement('span');
-            spanBinElement.classList.add('modal-span-bin');
-            binIcon = document.createElement('i');
-            binIcon.classList.add('fa-solid', 'fa-trash-can');
-
-            binIcon.addEventListener('click', () => {
-                validationDeleteProject(item.id);
-            });
-
-            figureModalElement.appendChild(imgElement);
-            spanBinElement.appendChild(binIcon);
-            figureModalElement.appendChild(spanBinElement);
-            
             figureElement.appendChild(imgElement);
             figureElement.appendChild(titleElement);
+            
             figureElement.classList.add('project-figure');
 
-            elementContainer.appendChild(figureModalElement);
+            elementContainer.appendChild(figureElement);
+            /*elementContainer.appendChild(figureElement.cloneNode(true));*/
             gallery.appendChild(figureElement);
             
             allProjects.push(newProject);
-            cloneAllProjects.push(newProject);
+            /*cloneAllProjects.push(newProject);*/
             
             console.log("Projet ajouté avec succès.");
         } else {
@@ -402,7 +383,6 @@ async function deleteProject(id, token) {
                 Authorization: `Bearer ${token}`,
             },
         });
-
         if (response.ok) {
             window.alert('Le projet a été supprimé');
         }
@@ -410,9 +390,7 @@ async function deleteProject(id, token) {
         console.error('erreur lors de la suppression du projet:', error);
     }
 }
-
 /** */
-
 async function validationDeleteProject(id) {
     const confirmation = confirm(
         'Etes-vous sûr de supprimer ce projet ?'
@@ -423,6 +401,7 @@ async function validationDeleteProject(id) {
         if (projectDeleted && projectDeleted.length) {
             projectDeleted.forEach(element => element.remove())
         }
+        console.log(projectDeleted);
         closeModal();
     }
 }
