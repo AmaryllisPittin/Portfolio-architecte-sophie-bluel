@@ -4,19 +4,26 @@ import { onFilterClick } from './APIrequest.js';
 
 /*OUVERTURE de la modale*/
 
-const token = localStorage.getItem("token");
 let overlay = document.getElementById('modal');
 let modal = document.getElementById('modal-content');
 
 let binIcon;
 let arrowIcon;
 let xIcon;
+let modalContentAddBody;
 
+const loggedIn = !!localStorage.getItem('token');
+
+if (loggedIn) {
+
+const token = localStorage.getItem("token");
 modal.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     return;
 });
+
+
 
 const openModal = function (e) {
     e.preventDefault();
@@ -32,6 +39,8 @@ const openModal = function (e) {
         console.log('la cible n\'a pas été trouvée / ou est null');
     }
 };
+
+
 
 
 /*FERMETURE de la modale*/
@@ -52,6 +61,8 @@ const stopPropagation = function (e) {
 }
 
 document.getElementById('portfolio-modified').addEventListener('click', openModal);
+
+
 
 /*FETCH pour la galerie de la PREMIERE MODALE + icone poubelle*/
 
@@ -84,6 +95,7 @@ fetch("http://localhost:5678/api/works")
 });
 
 
+
 /*CREATION de la partie "AJOUT PHOTOS"*/
 
 let modalContent = document.querySelector('.modal-wrapper');
@@ -94,8 +106,8 @@ let modalContentAdd = document.createElement('div');
 modalContentAdd.classList.add('modal-add-wrapper');
 modalContentAdd.id = 'modal-content';
 
-
 /*MODALE 2: header du modalContentAdd**/
+
 const modalAddTitle = document.createElement('h3');
 modalAddTitle.innerText='Ajout photo';
 
@@ -110,7 +122,6 @@ modalContentAdd.appendChild(modalAddTitle);
 modalContentAdd.appendChild(arrowIcon);
 modalContentAdd.appendChild(xIcon);
 
-
 /*AJOUT PHOTOS: body du modalContentAdd*/
 
 const modalContentAddBody = document.createElement('div');
@@ -121,7 +132,6 @@ modalAddInputContainer.classList.add('input-container');
 
 modalContentAddBody.appendChild(modalAddInputContainer);
 modalContentAdd.appendChild(modalContentAddBody);
-
 
 /*AJOUT PHOTOS: Contenu du modalAddInputContainer pour importer le fichier image*/
 
@@ -151,7 +161,6 @@ inputContainerFlex.appendChild(imageIcon);
 inputContainerFlex.appendChild(fileInput);
 inputContainerFlex.appendChild(labelInsertImage);
 inputContainerFlex.appendChild(pImageFormat);
-
 
 
 
@@ -203,7 +212,6 @@ addImageForm.appendChild(selectCategory);
 formContainer.appendChild(addImageForm);
 modalContentAddBody.appendChild(formContainer);
 
-
 /*MODALE 2: création du bouton "Valider"*/
 
 const validButton = document.createElement('button');
@@ -253,6 +261,7 @@ fileInput.addEventListener('change', function(event) {
     }
 });
 
+
 /****TENTATIVE POST******/
 
 fileInput.type = 'file';
@@ -266,6 +275,7 @@ function updateSelectedFile(event) {
     console.log("Fichier sélectionné :", selectedFile.name);
 }
 modalContentAddBody.appendChild(fileInput);
+
 async function addProject(event, token) {
     event.preventDefault();
     let inputTitle = document.getElementById("title-input");
@@ -327,17 +337,18 @@ async function addProject(event, token) {
     }
 }
 
-// Ajoutez l'écouteur d'événements pour le formulaire
 modalContentAddBody.addEventListener('submit', async (event) => {
     event.preventDefault();
 
     try {
         await addProject(event, token);
         closeModal(event);
+
     } catch (error) {
         console.error(error);
         alert("Une erreur s'est produite lors de l'ajout du projet.");
     }
+
 });
 
 /*Comportement de la modale d'ajout*/
@@ -404,4 +415,5 @@ async function validationDeleteProject(id) {
         console.log(projectDeleted);
         closeModal();
     }
+}
 }
