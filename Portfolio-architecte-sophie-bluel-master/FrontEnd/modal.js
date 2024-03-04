@@ -1,6 +1,5 @@
 import { allProjects } from './APIrequest.js';
-import { cloneAllProjects } from './APIrequest.js';
-import { onFilterClick } from './APIrequest.js';
+import { createGallery } from './APIrequest.js';
 
 /*OUVERTURE de la modale*/
 
@@ -324,7 +323,8 @@ async function addProject(event, token) {
             gallery.appendChild(figureElement);
             
             allProjects.push(newProject);
-            /*cloneAllProjects.push(newProject);*/
+
+
             
             console.log("Projet ajouté avec succès.");
         } else {
@@ -394,26 +394,26 @@ async function deleteProject(id, token) {
                 Authorization: `Bearer ${token}`,
             },
         });
+
         if (response.ok) {
             window.alert('Le projet a été supprimé');
         }
     } catch (error) {
-        console.error('erreur lors de la suppression du projet:', error);
+        console.error('Erreur lors de la suppression du projet:', error);
     }
 }
-/** */
+
 async function validationDeleteProject(id) {
-    const confirmation = confirm(
-        'Etes-vous sûr de supprimer ce projet ?'
-    );
+    const confirmation = confirm('Etes-vous sûr de supprimer ce projet ?');
     if (confirmation) {
         await deleteProject(id, token);
         const projectDeleted = document.querySelectorAll(`[data-id="${id}"]`);
         if (projectDeleted && projectDeleted.length) {
-            projectDeleted.forEach(element => element.remove())
+            projectDeleted.forEach(element => element.remove());
         }
         console.log(projectDeleted);
         closeModal();
     }
 }
 }
+
