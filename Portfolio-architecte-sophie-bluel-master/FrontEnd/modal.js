@@ -1,4 +1,5 @@
 import { allProjects } from './APIrequest.js';
+import { onFilterClick } from './APIrequest.js';
 import { createGallery } from './APIrequest.js';
 
 /*OUVERTURE de la modale*/
@@ -38,7 +39,6 @@ const openModal = function (e) {
         console.log('la cible n\'a pas été trouvée / ou est null');
     }
 };
-
 
 
 
@@ -323,6 +323,7 @@ async function addProject(event, token) {
             gallery.appendChild(figureElement);
             
             allProjects.push(newProject);
+            document.querySelector('.filter-button').addEventListener('click', onFilterClick);
 
 
             
@@ -342,7 +343,8 @@ modalContentAddBody.addEventListener('submit', async (event) => {
 
     try {
         await addProject(event, token);
-        closeModal(event);
+        closeModal(e);
+        onFilterClick(e);
 
     } catch (error) {
         console.error(error);
@@ -413,6 +415,8 @@ async function validationDeleteProject(id) {
         }
         console.log(projectDeleted);
         closeModal();
+        onFilterClick(e)
+
     }
 }
 }
