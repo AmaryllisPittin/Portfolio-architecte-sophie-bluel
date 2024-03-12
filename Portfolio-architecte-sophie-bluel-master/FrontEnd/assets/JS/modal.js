@@ -31,12 +31,25 @@ const stopPropagation = function (e) {
   e.stopPropagation();
 };
 
+/****** */
+const resetModalContent = function () {
+  document.getElementById("title-input").value = "";
+  document.getElementById("category-select").value = "";
+
+  const inputContainerFlex = document.querySelector(".input-container-flex");
+  const newInputContainerFlex = inputContainerFlex.cloneNode(true);
+  inputContainerFlex.parentNode.replaceChild(newInputContainerFlex, inputContainerFlex);
+};
+/***** */
+
 const closeModal = function () {
   if (overlay === null) return;
   if (overlay !== null) {
     overlay.style.display = "none";
     overlay.setAttribute("aria-hidden", "true");
     overlay.removeAttribute("aria-modal");
+
+    resetModalContent();
   } else {
     console.log("la cible n'a pas été trouvée / ou est null");
   }
@@ -264,9 +277,7 @@ modalContentAdd.addEventListener("click", function (e) {
   stopPropagation(e);
 });
 
-modalContentAdd
-  .querySelector("#js-close-modal-icon")
-  .addEventListener("click", closeModal);
+modalContentAdd.querySelector("#js-close-modal-icon").addEventListener("click", closeModal);
 /** */
 
 addImagesButton.addEventListener("click", () => {
