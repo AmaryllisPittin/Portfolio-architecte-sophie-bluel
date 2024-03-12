@@ -97,6 +97,7 @@ export const token = localStorage.getItem("token");
 const Auth = () => {
   const portfolioModifyButton = document.getElementById("portfolio-modified");
   const buttonsContainer = document.querySelector(".buttons-container");
+  const editionModeBar = document.querySelector(".edition-mode");
 
   if (token) {
     const loginLinkOnIndex = document.getElementById("login-link");
@@ -104,6 +105,7 @@ const Auth = () => {
     loginLinkOnIndex.style.cursor = "pointer";
 
     portfolioModifyButton.style.display = "flex";
+    editionModeBar.style.display = "flex";
     buttonsContainer.style.display = "flex";
 
     loginLinkOnIndex.addEventListener("click", function () {
@@ -117,6 +119,7 @@ const Auth = () => {
     });
   } else {
     portfolioModifyButton.style.display = "none";
+    editionModeBar.style.display = "none";
     buttonsContainer.style.display = "flex";
   }
 };
