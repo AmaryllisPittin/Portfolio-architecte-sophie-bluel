@@ -126,9 +126,11 @@ li a {
 li a {
 	text-decoration:none;
 	color:black;
+	font-size: 1em;
 }
 
-li:hover {
+li:hover,
+li a:hover {
 	color: #B1663C;
 }
 
@@ -240,6 +242,7 @@ input[type="submit"]{
 	padding:7px 20px 7px 20px;
 	margin-bottom:40px;
 	margin-left:10px;
+	cursor: pointer;
 }
 
 .filter-button:active {
@@ -497,3 +500,17 @@ footer nav ul {
 	cursor: pointer;
 }
 
+.edition-mode {
+	display:flex;
+	flex-direction:row;
+	background-color: black;
+	width:100%;
+	height:59px;
+	color:white;
+	justify-content: center;
+	align-items:center;
+}
+
+.edition-mode p {
+	margin-left:10px;
+}
