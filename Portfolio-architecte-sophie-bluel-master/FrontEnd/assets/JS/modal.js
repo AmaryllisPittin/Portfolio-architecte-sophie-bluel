@@ -1,6 +1,4 @@
-import { getWorks } from "./App.js";
-
-const token = localStorage.getItem("token");
+token = localStorage.getItem("token");
 
 /******** GESTION OUVERTURE ET FERMETURE DE LA MODALE ********/
 
@@ -36,9 +34,17 @@ const resetModalContent = function () {
   document.getElementById("title-input").value = "";
   document.getElementById("category-select").value = "";
 
+  const imageTag = document.querySelector('.input-container').querySelector('img');
+  imageTag.remove();
+
   const inputContainerFlex = document.querySelector(".input-container-flex");
   const newInputContainerFlex = inputContainerFlex.cloneNode(true);
   inputContainerFlex.parentNode.replaceChild(newInputContainerFlex, inputContainerFlex);
+
+  modalContentAdd.style.display = "none";
+  modalContainer.appendChild(modalContent);
+  modalContent.style.display = "block";
+
 };
 /***** */
 

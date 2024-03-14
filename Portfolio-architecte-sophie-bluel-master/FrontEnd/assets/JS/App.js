@@ -1,7 +1,7 @@
 let listCategories = [];
 let allProjects = [];
 
-export async function getWorks() {
+ async function getWorks() {
   await fetch("http://localhost:5678/api/works")
     .then((response) => {
       return response.json();
@@ -92,7 +92,7 @@ const filterWorks = () => {
 };
 
 /****************** GESTION DE L'AUTHENTIFICATION ******************/
-export const token = localStorage.getItem("token");
+let token = localStorage.getItem("token");
 
 const Auth = () => {
   const portfolioModifyButton = document.getElementById("portfolio-modified");
