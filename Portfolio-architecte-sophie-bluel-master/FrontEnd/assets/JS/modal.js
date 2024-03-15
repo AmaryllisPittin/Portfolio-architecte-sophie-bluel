@@ -30,7 +30,7 @@ const stopPropagation = function (e) {
 };
 
 /****** */
-const resetModalContent = function () {
+/*const resetModalContent = function () {
   const titleInput = document.getElementById("title-input");
   if (titleInput) {
     titleInput.value = "";
@@ -48,10 +48,18 @@ const resetModalContent = function () {
     imageTag.remove();
   }
 
+  modalAddInputContainer.innerHTML = "";
+
+  // Réinsérer les éléments initiaux à l'intérieur de inputContainerFlex
+  inputContainerFlex.appendChild(imageIcon);
+  inputContainerFlex.appendChild(initialFileInput);
+  inputContainerFlex.appendChild(labelInsertImage);
+  inputContainerFlex.appendChild(pImageFormat);
+
   modalContentAdd.style.display = "none";
   modalContainer.appendChild(modalContent);
   modalContent.style.display = "block";
-};
+};*/
 
 
 /***** */
@@ -182,8 +190,6 @@ let modalContentAdd = document.createElement("div");
 
 modalContentAdd.classList.add("modal-add-wrapper");
 modalContentAdd.id = "modal-content";
-
-resetModalContent();
 
 /*MODALE 2: header du modalContentAdd**/
 
@@ -341,6 +347,33 @@ fileInput.addEventListener("change", function (event) {
     }
   }
 });
+
+/***** */
+const resetModalContent = function () {
+  const titleInput = document.getElementById("title-input");
+  if (titleInput) {
+    titleInput.value = "";
+  }
+
+  console.log("titleInput:", titleInput)
+
+  const categorySelect = document.getElementById("category-select");
+  if (categorySelect) {
+    categorySelect.value = "";
+  }
+
+  const imageTag = document.querySelector('.input-container img');
+  if (imageTag) {
+    imageTag.remove();
+  }
+
+  modalAddInputContainer.innerHTML = "";
+  modalAddInputContainer.appendChild(inputContainerFlex);
+
+  modalContentAdd.style.display = "none";
+  modalContainer.appendChild(modalContent);
+  modalContent.style.display = "block";
+};
 
 /****TENTATIVE POST******/
 
