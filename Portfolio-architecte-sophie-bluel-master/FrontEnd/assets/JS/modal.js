@@ -29,42 +29,6 @@ const stopPropagation = function (e) {
   e.stopPropagation();
 };
 
-/****** */
-/*const resetModalContent = function () {
-  const titleInput = document.getElementById("title-input");
-  if (titleInput) {
-    titleInput.value = "";
-  }
-
-  console.log("titleInput:", titleInput)
-
-  const categorySelect = document.getElementById("category-select");
-  if (categorySelect) {
-    categorySelect.value = "";
-  }
-
-  const imageTag = document.querySelector('.input-container img');
-  if (imageTag) {
-    imageTag.remove();
-  }
-
-  modalAddInputContainer.innerHTML = "";
-
-  // Réinsérer les éléments initiaux à l'intérieur de inputContainerFlex
-  inputContainerFlex.appendChild(imageIcon);
-  inputContainerFlex.appendChild(initialFileInput);
-  inputContainerFlex.appendChild(labelInsertImage);
-  inputContainerFlex.appendChild(pImageFormat);
-
-  modalContentAdd.style.display = "none";
-  modalContainer.appendChild(modalContent);
-  modalContent.style.display = "block";
-};*/
-
-
-/***** */
-
-// Dans closeModal, après avoir caché la modale
 const closeModal = function () {
   if (overlay === null) return;
   if (overlay !== null) {
@@ -72,7 +36,6 @@ const closeModal = function () {
     overlay.setAttribute("aria-hidden", "true");
     overlay.removeAttribute("aria-modal");
 
-    // Déclencher un événement de fermeture de la modale
     const closeModalEvent = new Event('modalClosed');
     document.dispatchEvent(closeModalEvent);
   } else {
@@ -80,7 +43,6 @@ const closeModal = function () {
   }
 };
 
-// Écouter l'événement de fermeture de la modale
 document.addEventListener('modalClosed', function() {
   resetModalContent();
 });
@@ -310,7 +272,6 @@ modalContentAdd.addEventListener("click", function (e) {
 });
 
 modalContentAdd.querySelector("#js-close-modal-icon").addEventListener("click", closeModal);
-/** */
 
 addImagesButton.addEventListener("click", () => {
   modalContent.style.display = "none";
@@ -355,8 +316,6 @@ const resetModalContent = function () {
     titleInput.value = "";
   }
 
-  console.log("titleInput:", titleInput)
-
   const categorySelect = document.getElementById("category-select");
   if (categorySelect) {
     categorySelect.value = "";
@@ -385,7 +344,7 @@ fileInput.addEventListener("change", function (event) {
 });
 function updateSelectedFile(event) {
   let selectedFile = event.target.files[0];
-  console.log("Fichier sélectionné :", selectedFile.name);
+  console.log("Fichier sélectionné :", selectedFile);
 }
 modalContentAddBody.appendChild(fileInput);
 modalContentAddBody.addEventListener("submit", AddProject);
