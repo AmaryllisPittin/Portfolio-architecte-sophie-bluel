@@ -31,23 +31,32 @@ const stopPropagation = function (e) {
 
 /****** */
 const resetModalContent = function () {
-  document.getElementById("title-input").value = "";
-  document.getElementById("category-select").value = "";
+  const titleInput = document.getElementById("title-input");
+  if (titleInput) {
+    titleInput.value = "";
+  }
 
-  const imageTag = document.querySelector('.input-container').querySelector('img');
-  imageTag.remove();
+  console.log("titleInput:", titleInput)
 
-  const inputContainerFlex = document.querySelector(".input-container-flex");
-  const newInputContainerFlex = inputContainerFlex.cloneNode(true);
-  inputContainerFlex.parentNode.replaceChild(newInputContainerFlex, inputContainerFlex);
+  const categorySelect = document.getElementById("category-select");
+  if (categorySelect) {
+    categorySelect.value = "";
+  }
+
+  const imageTag = document.querySelector('.input-container img');
+  if (imageTag) {
+    imageTag.remove();
+  }
 
   modalContentAdd.style.display = "none";
   modalContainer.appendChild(modalContent);
   modalContent.style.display = "block";
-
 };
+
+
 /***** */
 
+// Dans closeModal, après avoir caché la modale
 const closeModal = function () {
   if (overlay === null) return;
   if (overlay !== null) {
@@ -55,11 +64,19 @@ const closeModal = function () {
     overlay.setAttribute("aria-hidden", "true");
     overlay.removeAttribute("aria-modal");
 
-    resetModalContent();
+    // Déclencher un événement de fermeture de la modale
+    const closeModalEvent = new Event('modalClosed');
+    document.dispatchEvent(closeModalEvent);
   } else {
     console.log("la cible n'a pas été trouvée / ou est null");
   }
 };
+
+// Écouter l'événement de fermeture de la modale
+document.addEventListener('modalClosed', function() {
+  resetModalContent();
+});
+
 
 /******** GESTION DES PROJETS DE LA MODALE ********/
 let modalWorks = [];
@@ -166,6 +183,8 @@ let modalContentAdd = document.createElement("div");
 modalContentAdd.classList.add("modal-add-wrapper");
 modalContentAdd.id = "modal-content";
 
+resetModalContent();
+
 /*MODALE 2: header du modalContentAdd**/
 
 const modalAddTitle = document.createElement("h3");
@@ -221,6 +240,7 @@ inputContainerFlex.appendChild(imageIcon);
 inputContainerFlex.appendChild(fileInput);
 inputContainerFlex.appendChild(labelInsertImage);
 inputContainerFlex.appendChild(pImageFormat);
+
 
 /*AJOUT PHOTOS: Le formulaire*/
 
@@ -290,6 +310,7 @@ addImagesButton.addEventListener("click", () => {
   modalContent.style.display = "none";
   modalContainer.appendChild(modalContentAdd);
   modalContentAdd.style.display = "block";
+  inputContainerFlex.style.display = "flex";
 });
 
 arrowIcon.addEventListener("click", () => {
