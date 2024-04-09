@@ -15,7 +15,7 @@ let allProjects = [];
 }
 getWorks();
 
-const getCategories = async () => {
+getCategories = async () => {
   await fetch("http://localhost:5678/api/categories")
     .then((response) => {
       return response.json();
@@ -66,7 +66,6 @@ const createCategories = () => {
     button.textContent = categories.name;
     filterbar.appendChild(button);
 
-    console.log('Function createCategories called');
   });
   filterWorks();
 };

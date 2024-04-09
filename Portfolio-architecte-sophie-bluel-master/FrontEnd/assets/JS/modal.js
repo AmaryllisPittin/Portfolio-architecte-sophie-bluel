@@ -212,6 +212,20 @@ inputContainerFlex.appendChild(pImageFormat);
 
 /*AJOUT PHOTOS: Le formulaire*/
 
+getOptionsCategories = async () => {
+  await fetch("http://localhost:5678/api/categories")
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      listCategories = data;
+    })
+    .then(() => {
+      createOptionsCategories();
+    });
+};
+getOptionsCategories();
+
 const formContainer = document.createElement("div");
 formContainer.classList.add("form-container");
 const addImageForm = document.createElement("form");
@@ -230,30 +244,28 @@ labelCategoryImage.textContent = "Catégorie";
 labelCategoryImage.classList.add("form-label");
 
 const selectCategory = document.createElement("select");
-selectCategory.name = "categories";
-selectCategory.id = "category-select";
+const option = document.createElement("option");
 
-const optionCategory = document.createElement("option");
-optionCategory.value = "";
-const optionObjectCategory = document.createElement("option");
-optionObjectCategory.value = "1";
-optionObjectCategory.innerText = "Objets";
-const optionAppCategory = document.createElement("option");
-optionAppCategory.value = "2";
-optionAppCategory.innerText = "Appartements";
-const optionHrCategory = document.createElement("option");
-optionHrCategory.value = "3";
-optionHrCategory.innerText = "Hôtels & Restaurants";
+const createOptionsCategories = () => {
+  selectCategory.name = "categories";
+  selectCategory.id = "category-select";
 
+  listCategories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category.id;
+    option.textContent = category.name;
+    selectCategory.appendChild(option);
+  });
+};
+
+selectCategory.appendChild(option);
 addImageForm.appendChild(labelTitleImage);
 addImageForm.appendChild(formTitleImage);
 addImageForm.appendChild(labelCategoryImage);
 
-selectCategory.appendChild(optionCategory);
-selectCategory.appendChild(optionObjectCategory);
-selectCategory.appendChild(optionAppCategory);
-selectCategory.appendChild(optionHrCategory);
 addImageForm.appendChild(selectCategory);
+
+createOptionsCategories();
 
 formContainer.appendChild(addImageForm);
 modalContentAddBody.appendChild(formContainer);
