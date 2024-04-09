@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const inputMail = document.getElementById('email');
     const inputPassword = document.getElementById('password');
     const inputSubmitConnection = document.querySelector('.login-submit');
-    const errorMessageContainer = document.querySelector('.login-submit-and-link');
+    const errorMessageContainer = document.querySelector('.error-message-container');
 
     inputSubmitConnection.addEventListener('click', function (event) {
         event.preventDefault();
