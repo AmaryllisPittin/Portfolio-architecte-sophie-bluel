@@ -250,7 +250,7 @@ input[type="submit"]{
 	cursor: pointer;
 }
 
-.filter-button:active {
+.selected {
 	background-color: #1D6154;
 	color:white;
 }
