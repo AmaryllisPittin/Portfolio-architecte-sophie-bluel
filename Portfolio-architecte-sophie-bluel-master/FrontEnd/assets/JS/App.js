@@ -106,7 +106,7 @@ const Auth = () => {
 
     portfolioModifyButton.style.display = "flex";
     editionModeBar.style.display = "flex";
-    buttonsContainer.style.display = "flex";
+    buttonsContainer.style.visibility = "hidden";
 
     loginLinkOnIndex.addEventListener("click", function () {
       const confirmation = confirm(
@@ -120,7 +120,7 @@ const Auth = () => {
   } else {
     portfolioModifyButton.style.display = "none";
     editionModeBar.style.display = "none";
-    buttonsContainer.style.display = "flex";
+    buttonsContainer.style.visibility = "visible";
   }
 };
 

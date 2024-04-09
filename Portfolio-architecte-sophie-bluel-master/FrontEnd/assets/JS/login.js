@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(response => {
             if (response.status !== 200) {
-                displayErrorMessage('Identifiant ou mot de passe incorrectes')
-                throw new Error('Identifiant ou mot de passe incorrecte');
+                displayErrorMessage('Identifiant ou mot de passe incorrect')
+                throw new Error('Identifiant ou mot de passe incorrect');
             } else {
                 return response.json();
             }
